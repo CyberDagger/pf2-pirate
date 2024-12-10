@@ -1,5 +1,6 @@
 // IDs for array elements
-const SCENARIO_1 = 1;
+const SCENARIO_1 = 0;
+const SCENARIO_13 = 1;
 
 // HTML elements
 const button1 = document.querySelector("#button1");
@@ -22,6 +23,14 @@ let inventory = ["Shortsword"];
 let enemyHealth;
 let enemyAc;
 
+
+// Enemy list
 const enemies = [];
 
+// Adventure scenarios, numbered in the book
 const scenarios = [];
+
+// initialize buttons
+button1.onclick = update(scenarios[SCENARIO_13]);
+button2.onclick = update(scenarios[SCENARIO_13]);
+button3.onclick = update(scenarios[SCENARIO_13]);
