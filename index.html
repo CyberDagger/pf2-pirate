@@ -3,27 +3,32 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>RPG - Dragon Repeller</title>
+  <title>Pirate King's Plunder</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 <div id="game">
   <div id="stats">
-    <span class="stat">XP: <strong><span id="xpText">0</span></strong></span>
     <span class="stat">Health: <strong><span id="healthText">100</span></strong></span>
-    <span class="stat">Gold: <strong><span id="goldText">50</span></strong></span>
+    <span class="stat">Gold: <strong><span id="goldText">0</span></strong></span>
+    <span class="inventory">Inventory: <strong><span id="inventoryText">Shortsword</span></strong></span>
+  </div>
+  <div id="enemyStats">
+    <span class="stat">Enemy Name: <strong><span id="enemyName"></span></strong></span>
+    <span class="stat">Health: <strong><span id="enemyHealth"></span></strong></span>
   </div>
   <div id="controls">
-    <button id="button1">Go to store</button>
-    <button id="button2">Go to cave</button>
-    <button id="button3">Fight dragon</button>
+    <button id="button1">Begin</button>
+    <button id="button2">dummy</button>
+    <button id="button3">dummy</button>
   </div>
-  <div id="monsterStats">
-    <span class="stat">Monster Name: <strong><span id="monsterName"></span></strong></span>
-    <span class="stat">Health: <strong><span id="monsterHealth"></span></strong></span>
+  <div id="text">
+    <p>You are a wandering adventurer visiting Otari, a small town on the coast of the Starstone Isle, an enormous island magically raised out of the ocean by an ancient god. Otari is renowned for its lumber and fine wooden boats, but that's not what brought you here--you came looking for adventure!</p>
+    <p>Word has it that a vicious beast is preying upon the town's livestock, and the mayor has offered 10 gold coins to any hero who can put an end to the menace. That kind of money would pay your expenses for a month!</p>
+    <p>After asking around at a nearby tavern called the Crow's Casks, you learn that most of the attacks occur on the west side of town, not far from the shore. That seems like the best place to start your search.</p>
+    <p>You gather up your belongings and make your way out along the rocky beach to begin your hunt. It doesn't take long for you to find the entrance to a dark and mysterious cave. Large paw prints lead to and from the gloomy opening.</p>
   </div>
-  <div id="text">Welcome to Dragon Repeller. You must defeat the dragon that is preventing people from leaving the town. You are in the town square. Where do you want to go? Use the buttons above.</div>
 </div>
 <script  src="script.js"></script>
 </body>
