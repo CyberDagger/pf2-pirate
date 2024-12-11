@@ -6,6 +6,7 @@ const SCENE_13 = 1;
 const button1 = document.querySelector("#button1");
 const button2 = document.querySelector("#button2");
 const button3 = document.querySelector("#button3");
+const button4 = document.querySelector("#button4");
 const text = document.querySelector("#text");
 const healthText = document.querySelector("#healthText");
 const goldText = document.querySelector("#goldText");
@@ -20,19 +21,57 @@ const text1 = "<p>You are a wandering adventurer visiting Otari, a small town on
 
 const text13 = "<p>Noticing the tracks leading to the cave, you hide in the nearby underbrush, hoping to ambush whatever foul beast lives here. After just a few minutes, you hear the sounds of something approaching, and the scent of wet fur hangs heavy in the air.</p><p>Emerging from the bushes is a lean, mangy wolf carrying the body of a dead chicken in its maw. It appears to be returning home after its most recent hunt. Clearly, this is the beast that’s been preying upon the farmers’ animals. You wait until it is near then draw your shortsword and spring out to attack!</p><p>You are now in combat with a wolf! You know that this feral beast cannot be tamed and must be slain to keep the farmers’ livestock safe.</p>"
 
-// Player variables
-let health = 20;
-let ac = 18;
-let gold = 0;
-let inventory = ["Shortsword"];
+// Player object
+const player = {
+    // Basic values
+    ac: 18,
+    hp: 20,
+    attack: 7,
+    damageDie: 6,
+    damageBonus: 3,
+    // Saves
+    fortitude: 8,
+    reflex: 5,
+    // Skills
+    perception: 4,
+    athletics: 7,
+    // Belongings
+    inventory: ["Shortsword"],
+    gold: 0,
+    silver: 0,
+    copper: 0
+}
 
-// Enemy variables
-let enemyHealth;
-let enemyAc;
-
+// Combat variables
+let distance;
 
 // Enemy list
-const enemies = [];
+const enemies = [
+    {
+        name: "Wolf",
+        ac: 14,
+        hp: 15,
+        attack: 5,
+        damageDie: 6,
+        damageBonus: 2
+    },
+    {
+        name: "Snake",
+        ac: 15,
+        hp: 8,
+        attack: 8,
+        damageDie: 4,
+        damageBonus: 0
+    },
+    {
+        name: "Statue",
+        ac: 18,
+        hp: 20,
+        attack: 9,
+        damageDie: 8,
+        damageBonus: 2
+    }
+];
 
 // Adventure scenarios, numbered in the book
 const scenes = [
@@ -54,7 +93,7 @@ const scenes = [
 button1.onclick = go13;
 button2.onclick = dummy;
 button3.onclick = dummy;
-
+button4.onclick = dummy;
 
 // Placeholder function
 function dummy() {
