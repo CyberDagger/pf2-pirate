@@ -8,6 +8,12 @@ body {
     padding: 10px;
     text-indent: 15px;
   }
+
+  .instruction {
+    background-color: #303030;
+    color: LightSalmon;
+    padding: 1px 20px;
+  }
   
   #game {
     max-width: 500px;
@@ -30,6 +36,14 @@ body {
     padding: 5px;
   }
   
+  #playerStats {
+    display: none;
+    border: 1px black solid;
+    color: white;
+    padding: 5px;
+    background-color: green;
+  }
+
   #enemyStats {
     display: none;
     border: 1px black solid;

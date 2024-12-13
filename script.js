@@ -7,6 +7,11 @@ const text = document.querySelector("#text");
 const healthText = document.querySelector("#healthText");
 const goldText = document.querySelector("#goldText");
 const inventoryText = document.querySelector("#inventoryText");
+const playerStats = document.querySelector("#playerStats");
+const playerHealthText = document.querySelector("#playerHealth");
+const playerArmorText = document.querySelector("#playerArmor");
+const playerAttackText = document.querySelector("#playerAttack");
+const playerDamageText = document.querySelector("#playerDamage");
 const enemyStats = document.querySelector("#enemyStats");
 const enemyNameText = document.querySelector("#enemyName");
 const enemyHealthText = document.querySelector("#enemyHealth");
@@ -17,7 +22,7 @@ const text0 = "Hello, world!"
 
 const text1 = "<p>You are a wandering adventurer visiting Otari, a small town on the coast of the Starstone Isle, an enormous island magically raised out of the ocean by an ancient god. Otari is renowned for its lumber and fine wooden boats, but that's not what brought you here—you came looking for adventure!</p><p>Word has it that a vicious beast is preying upon the town's livestock, and the mayor has offered 10 gold coins to any hero who can put an end to the menace. That kind of money would pay your expenses for a month!</p><p>After asking around at a nearby tavern called the Crow's Casks, you learn that most of the attacks occur on the west side of town, not far from the shore. That seems like the best place to start your search.</p><p>You gather up your belongings and make your way out along the rocky beach to begin your hunt. It doesn't take long for you to find the entrance to a dark and mysterious cave. Large paw prints lead to and from the gloomy opening.</p>"
 
-const text13 = "<p>Noticing the tracks leading to the cave, you hide in the nearby underbrush, hoping to ambush whatever foul beast lives here. After just a few minutes, you hear the sounds of something approaching, and the scent of wet fur hangs heavy in the air.</p><p>Emerging from the bushes is a lean, mangy wolf carrying the body of a dead chicken in its maw. It appears to be returning home after its most recent hunt. Clearly, this is the beast that’s been preying upon the farmers’ animals. You wait until it is near then draw your shortsword and spring out to attack!</p><p>You are now in combat with a wolf! You know that this feral beast cannot be tamed and must be slain to keep the farmers’ livestock safe.</p>"
+const text13 = "<p>Noticing the tracks leading to the cave, you hide in the nearby underbrush, hoping to ambush whatever foul beast lives here. After just a few minutes, you hear the sounds of something approaching, and the scent of wet fur hangs heavy in the air.</p><p>Emerging from the bushes is a lean, mangy wolf carrying the body of a dead chicken in its maw. It appears to be returning home after its most recent hunt. Clearly, this is the beast that’s been preying upon the farmers’ animals. You wait until it is near then draw your shortsword and spring out to attack!</p><div class=\"instruction\"><p>You are now in combat with a wolf! You know that this feral beast cannot be tamed and must be slain to keep the farmers’ livestock safe. Both you and the wolf take turns attacking one another. You attack by rolling the 20-sided die (or d20 for short) and adding your attack bonus (which represents your skill at wielding a weapon). If the total is equal to or greater than the wolf’s Armor Class (AC for short), then the attack is a hit and deals damage. Subtract the damage from the wolf’s Hit Points (HP for short). To defeat the wolf, you must reduce the wolf to 0 HP or less. On the wolf’s turn, it will attack you—you’ll roll a d20 for the wolf, add its attack bonus, and compare the result to your AC. If the wolf reduces you to 0 HP or less, you die.</p><p>Remember that you go first. If you find that the wolf is hitting you too much, you should remember to hide with your third action to make it harder for the wolf to hit you.</p></div>"
 
 // Player object
 const player = {
@@ -111,7 +116,6 @@ function startGame() {
     button2.onclick = dummy;
     button3.onclick = dummy;
     button4.onclick = dummy;
-    text.innerHTML = text1;
     // Player variables
     player.hp = 20;
     player.actionCount = 3;
@@ -141,27 +145,46 @@ function dummy() {
     text.innerText = text0;
 }
 
+// Dice roller
+function roll(die) {
+    return Math.floor(Math.random() * die) + 1;
+}
+
 // Scene transition functions
 function go13() {
     // Update text field
     text.innerHTML = text13;
-    /*
+
+    //Load player
+    playerArmorText.innerText = player.ac;
+    playerHealthText.innerText = player.hp;
+    
+    let attackMod = player.attack - (3 - player.actionCount) * 5;
+    playerAttackText.innerText = `${attackMod >=0 ? '+' : ''}` + attackMod;
+    playerDamageText.innerText = "1d" + player.damageDie + "+" + player.damageBonus;
+    playerStats.style.display = "block";
+
     // Load enemy
-    enemyNameText = enemies[0].name;
-    enemyArmorText = enemies[0].ac;
-    enemyHealthText = enemies[0].hp;
+    enemyNameText.innerText = enemies[0].name;
+    enemyArmorText.innerText = enemies[0].ac;
+    enemyHealthText.innerText = enemies[0].hp;
     enemyStats.style.display = "block";
-    */
+    
     // Set up combat actions
-    button1.onclick = attack;
+    button1.onclick = () => attack(attackMod);
     button2.onclick = hide;
-    button1.innerText = "Strike";
+    button1.innerText = "Strike with Your Shortsword";
     button2.innerText = "Hide in the Bushes";
     button2.style.display = "inline-block";
+
+    //Combat logic
+
 }
 
-function attack() {
-    text.innerText = "You attack.";
+//function attack() {
+function attack(a) {
+    text.innerText = "You attack. (1d20+" + a +")";
+    text.innerText += "\n" + roll(20);
 }
 
 function hide() {
