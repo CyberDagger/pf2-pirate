@@ -181,10 +181,47 @@ function go13() {
 
 }
 
-//function attack() {
-function attack(a) {
-    text.innerText = "You attack. (1d20+" + a +")";
-    text.innerText += "\n" + roll(20);
+function startFight(enemyId) {
+    //Load player
+    playerArmorText.innerText = player.ac;
+    playerHealthText.innerText = player.hp;
+
+    let attackMod = player.attack;
+    playerAttackText.innerText = `${attackMod >=0 ? '+' : ''}` + attackMod;
+    playerDamageText.innerText = "1d" + player.damageDie + "+" + player.damageBonus;
+    playerStats.style.display = "block";
+
+    // Load enemy
+    let enemyName = enemies[enemyId].name;
+    let enemyArmor = enemies[enemyId].ac;
+    let enemyHealth = enemies[enemyId].hp;
+    enemyNameText.innerText = enemyName;
+    enemyArmorText.innerText = enemyArmor;
+    enemyHealthText.innerText = enemyHealth;
+    enemyStats.style.display = "block";
+}
+
+function attack(attackMod) {
+    text.innerHTML = "<p>You attack. (1d20+" + attackMod +")</p>";
+    let attackRoll = roll(20) + attackMod;
+    text.innerHTML += "<p>\nYou roll a " + attackRoll + ".</p>";
+    if (attackRoll >= enemies[0].ac) {
+        let damageRoll = roll(player.damageDie) + player.damageBonus;
+        if (attackRoll >= (enemies[0].ac) + 10) {
+            text.innerHTML += "<p>You got a critical hit!</p>";
+            text.innerHTML += "<p>You deal " + damageRoll + " damage. 2x(1d" + player.damageDie + "+" + player.damageBonus + ")</p>";
+            enemies[0].hp -= (damageRoll * 2);
+        } else {
+            text.innerHTML += "<p>You hit!</p>";
+            text.innerHTML += "<p>You deal " + (damageRoll*2) + " damage. (1d" + player.damageDie + "+" + player.damageBonus + ")</p>";
+            enemies[0].hp -= damageRoll;
+        }
+        enemyHealthText.innerText = enemies[0].hp;
+    } else {
+        text.innerHTML += "<p>You miss!</p>";
+    }
+    
+    
 }
 
 function hide() {
