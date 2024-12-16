@@ -74,7 +74,8 @@ const enemies = [
         hp: 15,
         attack: 5,
         damageDie: 6,
-        damageBonus: 2
+        damageBonus: 2,
+        actionCount: 3
     },
     {
         name: "Snake",
@@ -82,7 +83,8 @@ const enemies = [
         hp: 8,
         attack: 8,
         damageDie: 4,
-        damageBonus: 0
+        damageBonus: 0,
+        actionCount: 3
     },
     {
         name: "Statue",
@@ -90,7 +92,8 @@ const enemies = [
         hp: 20,
         attack: 9,
         damageDie: 8,
-        damageBonus: 2
+        damageBonus: 2,
+        actionCount: 3
     }
 ];
 
@@ -177,22 +180,33 @@ function startFight(enemyId) {
     let enemyName = enemies[enemyId].name;
     let enemyArmor = enemies[enemyId].ac;
     let enemyHealth = enemies[enemyId].hp;
+    let enemyActions = enemies[enemyId].actionCount;
     enemyNameText.innerText = enemyName;
     enemyArmorText.innerText = enemyArmor;
     enemyHealthText.innerText = enemyHealth;
     enemyStats.style.display = "block";
-    console.log(enemyArmor);
 
     // Set up combat actions
-    button1.onclick = () => attack();
+    button1.onclick = () => {
+        let checkTurnEnd = attack(enemyArmor);
+        if (checkTurnEnd === 0) {
+            text.innerHTML += "<p>3 actions spent. Passing turn.</p>";
+            while (enemyActions > 0) {
+                enemyMove(enemyActions);
+                enemyActions--;
+            }
+            enemyActions = enemies[enemyId].actionCount;
+            console.log(enemyActions);
+        }
+    }
     button2.onclick = hide;
     button1.innerText = "Strike with Your Shortsword";
     button2.innerText = "Hide in the Bushes";
     button2.style.display = "inline-block";
 }
 
-function attack() {
-    console.log(enemyArmor);
+function attack(enemyArmor) {
+    player.actionCount--;
     text.innerHTML = "<p>You attack. (1d20+" + player.attackMod +")</p>";
     let attackRoll = roll(20) + player.attackMod;
     text.innerHTML += "<p>\nYou roll a " + attackRoll + ". (1d20+" + player.attackMod + ")</p>";
@@ -212,10 +226,16 @@ function attack() {
     } else {
         text.innerHTML += "<p>You miss!</p>";
     }
+
     player.attackMod -= 5;
     playerAttackText.innerText = `${player.attackMod >=0 ? '+' : ''}` + player.attackMod;
+    return player.actionCount;
 }
 
 function hide() {
     text.innerText = "You hide.";
+}
+
+function enemyMove(enemyActions) {
+    text.innerHTML += "<p>Enemy takes its turn.</p>";
 }
