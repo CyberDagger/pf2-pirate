@@ -30,6 +30,7 @@ const player = {
     ac: 18,
     hp: 20,
     attack: 7,
+    attackMod: 7,
     damageDie: 6,
     damageBonus: 3,
     actionCount: 3,
@@ -119,6 +120,7 @@ function startGame() {
     // Player variables
     player.hp = 20;
     player.actionCount = 3;
+    player.attackMod = player.attack;
     player.inventory = ["Shortsword"];
     player.gold = 0;
     player.silver = 0;
@@ -155,30 +157,9 @@ function go13() {
     // Update text field
     text.innerHTML = text13;
 
-    //Load player
-    playerArmorText.innerText = player.ac;
-    playerHealthText.innerText = player.hp;
-    
-    let attackMod = player.attack - (3 - player.actionCount) * 5;
-    playerAttackText.innerText = `${attackMod >=0 ? '+' : ''}` + attackMod;
-    playerDamageText.innerText = "1d" + player.damageDie + "+" + player.damageBonus;
-    playerStats.style.display = "block";
-
-    // Load enemy
-    enemyNameText.innerText = enemies[0].name;
-    enemyArmorText.innerText = enemies[0].ac;
-    enemyHealthText.innerText = enemies[0].hp;
-    enemyStats.style.display = "block";
-    
-    // Set up combat actions
-    button1.onclick = () => attack(attackMod);
-    button2.onclick = hide;
-    button1.innerText = "Strike with Your Shortsword";
-    button2.innerText = "Hide in the Bushes";
-    button2.style.display = "inline-block";
-
     //Combat logic
-
+    player.attackMod = 7;
+    let combatResult = startFight(0);
 }
 
 function startFight(enemyId) {
@@ -186,7 +167,8 @@ function startFight(enemyId) {
     playerArmorText.innerText = player.ac;
     playerHealthText.innerText = player.hp;
 
-    let attackMod = player.attack;
+    let attackModRaw = player.attack;
+    let attackMod = attackModRaw;
     playerAttackText.innerText = `${attackMod >=0 ? '+' : ''}` + attackMod;
     playerDamageText.innerText = "1d" + player.damageDie + "+" + player.damageBonus;
     playerStats.style.display = "block";
@@ -199,29 +181,39 @@ function startFight(enemyId) {
     enemyArmorText.innerText = enemyArmor;
     enemyHealthText.innerText = enemyHealth;
     enemyStats.style.display = "block";
+    console.log(enemyArmor);
+
+    // Set up combat actions
+    button1.onclick = () => attack();
+    button2.onclick = hide;
+    button1.innerText = "Strike with Your Shortsword";
+    button2.innerText = "Hide in the Bushes";
+    button2.style.display = "inline-block";
 }
 
-function attack(attackMod) {
-    text.innerHTML = "<p>You attack. (1d20+" + attackMod +")</p>";
-    let attackRoll = roll(20) + attackMod;
-    text.innerHTML += "<p>\nYou roll a " + attackRoll + ".</p>";
-    if (attackRoll >= enemies[0].ac) {
+function attack() {
+    console.log(enemyArmor);
+    text.innerHTML = "<p>You attack. (1d20+" + player.attackMod +")</p>";
+    let attackRoll = roll(20) + player.attackMod;
+    text.innerHTML += "<p>\nYou roll a " + attackRoll + ". (1d20+" + player.attackMod + ")</p>";
+    
+    if (attackRoll >= enemyArmor) {
         let damageRoll = roll(player.damageDie) + player.damageBonus;
-        if (attackRoll >= (enemies[0].ac) + 10) {
+        if (attackRoll >= (enemyArmor) + 10) {
             text.innerHTML += "<p>You got a critical hit!</p>";
             text.innerHTML += "<p>You deal " + damageRoll + " damage. 2x(1d" + player.damageDie + "+" + player.damageBonus + ")</p>";
-            enemies[0].hp -= (damageRoll * 2);
+            enemyHealth -= (damageRoll * 2);
         } else {
             text.innerHTML += "<p>You hit!</p>";
             text.innerHTML += "<p>You deal " + (damageRoll*2) + " damage. (1d" + player.damageDie + "+" + player.damageBonus + ")</p>";
-            enemies[0].hp -= damageRoll;
+            enemyHealth -= damageRoll;
         }
-        enemyHealthText.innerText = enemies[0].hp;
+        enemyHealthText.innerText = enemyHealth;
     } else {
         text.innerHTML += "<p>You miss!</p>";
     }
-    
-    
+    player.attackMod -= 5;
+    playerAttackText.innerText = `${player.attackMod >=0 ? '+' : ''}` + player.attackMod;
 }
 
 function hide() {
