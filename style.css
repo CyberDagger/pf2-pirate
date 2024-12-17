@@ -14,6 +14,14 @@ body {
     color: LightSalmon;
     padding: 1px 20px;
   }
+
+  .allyText {
+    color: lime;
+  }
+
+  .enemyText {
+    color: red;
+  }
   
   #game {
     max-width: 500px;

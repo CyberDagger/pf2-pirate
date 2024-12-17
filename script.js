@@ -16,6 +16,7 @@ const playerHealthText = document.querySelector("#playerHealth");
 const playerArmorText = document.querySelector("#playerArmor");
 const playerAttackText = document.querySelector("#playerAttack");
 const playerDamageText = document.querySelector("#playerDamage");
+const playerActionsText = document.querySelector("#playerActions");
 const enemyStats = document.querySelector("#enemyStats");
 const enemyNameText = document.querySelector("#enemyName");
 const enemyHealthText = document.querySelector("#enemyHealth");
@@ -81,27 +82,33 @@ const enemies = [
         ac: 14,
         hp: 15,
         attack: 5,
+        attackMod: 5,
         damageDie: 6,
         damageBonus: 2,
-        actionCount: 3
+        actionCount: 3,
+        act() {}
     },
     {
         name: "Snake",
         ac: 15,
         hp: 8,
         attack: 8,
+        attackMod: 8,
         damageDie: 4,
         damageBonus: 0,
-        actionCount: 3
+        actionCount: 3,
+        act() {}
     },
     {
         name: "Statue",
         ac: 18,
         hp: 20,
         attack: 9,
+        attackMod: 9,
         damageDie: 8,
         damageBonus: 2,
-        actionCount: 3
+        actionCount: 3,
+        act() {}
     }
 ];
 
@@ -190,11 +197,9 @@ function startFight(enemyId) {
     //Load player
     playerArmorText.innerText = player.ac;
     playerHealthText.innerText = player.hp;
-
-    let attackModRaw = player.attack;
-    let attackMod = attackModRaw;
-    playerAttackText.innerText = `${attackMod >=0 ? '+' : ''}` + attackMod;
+    playerAttackText.innerText = `${player.attackMod >=0 ? '+' : ''}` + player.attackMod;
     playerDamageText.innerText = "1d" + player.damageDie + "+" + player.damageBonus;
+    playerActionsText.innerText = "◈◈◈";
     playerStats.style.display = "block";
 
     // Fix this first
@@ -208,49 +213,55 @@ function startFight(enemyId) {
 
     // Set up combat actions
     button1.onclick = () => {
-        let checkTurnEnd = attack(enemy.ac);
+        let checkTurnEnd = attack(enemy);
         if (checkTurnEnd === 0) {
             text.innerHTML += "<p>3 actions spent. Passing turn.</p>";
+            player.attackMod = player.attack;
+            playerAttackText.innerText = `${player.attackMod >=0 ? "+" : ""}` + player.attackMod;
             text.innerHTML += "<p>The enemy takes its turn.</p>";
+            console.log("Enemy actions: " + enemyActions);
             while (enemyActions > 0) {
                 enemyMove(enemy);
                 enemyActions--;
+                console.log("Enemy actions: " + enemyActions);
             }
             enemyActions = enemies[enemyId].actionCount;
-            console.log(enemyActions);
         }
     }
     button2.onclick = hide;
     button1.innerText = "Strike with Your Shortsword";
     button2.innerText = "Hide in the Bushes";
     button2.style.display = "inline-block";
+    console.log("Player actions: " + player.actionCount);
 }
 
-function attack(enemyArmor) {
+// Player attacks
+function attack(enemy) {
     player.actionCount--;
-    text.innerHTML = "<p>You attack. (1d20+" + player.attackMod +")</p>";
+    text.innerHTML = "<p class=\"allyText\">You attack. (1d20+" + player.attackMod +")</p>";
     let attackRoll = roll(20) + player.attackMod;
-    text.innerHTML += "<p>\nYou roll a " + attackRoll + ". (1d20+" + player.attackMod + ")</p>";
+    text.innerHTML += "<p class=\"allyText\">\nYou roll a " + attackRoll + ". (" + (attackRoll - player.attackMod) + "+" + player.attackMod + ")</p>";
     
-    if (attackRoll >= enemyArmor) {
+    if (attackRoll >= enemy.ac) {
         let damageRoll = roll(player.damageDie) + player.damageBonus;
-        if (attackRoll >= (enemyArmor) + 10) {
-            text.innerHTML += "<p>You got a critical hit!</p>";
-            text.innerHTML += "<p>You deal " + damageRoll + " damage. 2x(1d" + player.damageDie + "+" + player.damageBonus + ")</p>";
-            enemyHealth -= (damageRoll * 2);
+        console.log("Damage roll: " + damageRoll);
+        if (attackRoll >= (enemy.ac) + 10) {
+            text.innerHTML += "<p class=\"allyText\">You got a critical hit!</p>";
+            text.innerHTML += "<p class=\"allyText\">You deal " + (damageRoll*2) + " damage. 2x(1d" + player.damageDie + `${player.attackMod >=0 ? "+" : "-"}` + player.damageBonus + ")</p>";
+            enemy.hp -= (damageRoll * 2);
         } else {
-            text.innerHTML += "<p>You hit!</p>";
-            text.innerHTML += "<p>You deal " + (damageRoll*2) + " damage. (1d" + player.damageDie + "+" + player.damageBonus + ")</p>";
-            enemyHealth -= damageRoll;
+            text.innerHTML += "<p class=\"allyText\">You hit!</p>";
+            text.innerHTML += "<p class=\"allyText\">You deal " + damageRoll + " damage. (1d" + player.damageDie + `${player.attackMod >=0 ? "+" : "-"}` + player.damageBonus + ")</p>";
+            enemy.hp -= damageRoll;
         }
-        enemyHealthText.innerText = enemyHealth;
+        enemyHealthText.innerText = enemy.hp;
     } else {
-        text.innerHTML += "<p>You miss!</p>";
+        text.innerHTML += "<p class=\"allyText\">You miss!</p>";
     }
 
     player.attackMod -= 5;
     playerAttackText.innerText = `${player.attackMod >=0 ? '+' : ''}` + player.attackMod;
-    console.log(player.actionCount);
+    console.log("Player actions: " + player.actionCount);
     return player.actionCount;
 }
 
@@ -259,5 +270,13 @@ function hide() {
 }
 
 function enemyMove(enemy) {
-    text.innerHTML += "<p>The Wolf attacks. (1d20+" + enemy.attack  + ")</p>";
+    text.innerHTML += "<p class=\"enemyText\">The Wolf attacks. (1d20+" + enemy.attackMod + ")</p>";
+    let attackRoll = roll(20) + enemy.attackMod;
+    text.innerHTML += "<p class=\"enemyText\">It rolls a " + attackRoll + ".</p>";
+    enemy.attackMod -= 5;
+    if (attackRoll >= player.ac) {
+        text.innerHTML += "<p class=\"enemyText\">Hit!</p>";
+    } else {
+        text.innerHTML += "<p class=\"enemyText\">Miss!</p>";
+    }
 }
