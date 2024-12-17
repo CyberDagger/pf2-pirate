@@ -1,3 +1,7 @@
+/*-------------*/
+/* UI Elements */
+/*-------------*/
+
 // HTML elements
 const button1 = document.querySelector("#button1");
 const button2 = document.querySelector("#button2");
@@ -23,6 +27,10 @@ const text0 = "Hello, world!"
 const text1 = "<p>You are a wandering adventurer visiting Otari, a small town on the coast of the Starstone Isle, an enormous island magically raised out of the ocean by an ancient god. Otari is renowned for its lumber and fine wooden boats, but that's not what brought you here—you came looking for adventure!</p><p>Word has it that a vicious beast is preying upon the town's livestock, and the mayor has offered 10 gold coins to any hero who can put an end to the menace. That kind of money would pay your expenses for a month!</p><p>After asking around at a nearby tavern called the Crow's Casks, you learn that most of the attacks occur on the west side of town, not far from the shore. That seems like the best place to start your search.</p><p>You gather up your belongings and make your way out along the rocky beach to begin your hunt. It doesn't take long for you to find the entrance to a dark and mysterious cave. Large paw prints lead to and from the gloomy opening.</p>"
 
 const text13 = "<p>Noticing the tracks leading to the cave, you hide in the nearby underbrush, hoping to ambush whatever foul beast lives here. After just a few minutes, you hear the sounds of something approaching, and the scent of wet fur hangs heavy in the air.</p><p>Emerging from the bushes is a lean, mangy wolf carrying the body of a dead chicken in its maw. It appears to be returning home after its most recent hunt. Clearly, this is the beast that’s been preying upon the farmers’ animals. You wait until it is near then draw your shortsword and spring out to attack!</p><div class=\"instruction\"><p>You are now in combat with a wolf! You know that this feral beast cannot be tamed and must be slain to keep the farmers’ livestock safe. Both you and the wolf take turns attacking one another. You attack by rolling the 20-sided die (or d20 for short) and adding your attack bonus (which represents your skill at wielding a weapon). If the total is equal to or greater than the wolf’s Armor Class (AC for short), then the attack is a hit and deals damage. Subtract the damage from the wolf’s Hit Points (HP for short). To defeat the wolf, you must reduce the wolf to 0 HP or less. On the wolf’s turn, it will attack you—you’ll roll a d20 for the wolf, add its attack bonus, and compare the result to your AC. If the wolf reduces you to 0 HP or less, you die.</p><p>Remember that you go first. If you find that the wolf is hitting you too much, you should remember to hide with your third action to make it harder for the wolf to hit you.</p></div>"
+
+/*--------------*/
+/* Game Objects */
+/*--------------*/
 
 // Player object
 const player = {
@@ -113,6 +121,10 @@ const scenes = [
     }
 ];
 
+/*---------------------------*/
+/* Game Initialization Logic */
+/*---------------------------*/
+
 // Game Start
 function startGame() {
     // Window variables
@@ -120,6 +132,7 @@ function startGame() {
     button2.onclick = dummy;
     button3.onclick = dummy;
     button4.onclick = dummy;
+
     // Player variables
     player.hp = 20;
     player.actionCount = 3;
@@ -128,6 +141,7 @@ function startGame() {
     player.gold = 0;
     player.silver = 0;
     player.copper = 0;
+
     // Render window
     healthText.innerText = player.hp;
     goldText.innerText = player.gold + " gold, " + player.silver + " silver, " + player.copper + " copper";
@@ -155,15 +169,22 @@ function roll(die) {
     return Math.floor(Math.random() * die) + 1;
 }
 
-// Scene transition functions
+/*----------------------------*/
+/* Scene Transition Functions */
+/*----------------------------*/
+
 function go13() {
     // Update text field
     text.innerHTML = text13;
 
-    //Combat logic
+    // Combat initialization
     player.attackMod = 7;
     let combatResult = startFight(0);
 }
+
+/*------------------------*/
+/* Combat Logic Functions */
+/*------------------------*/
 
 function startFight(enemyId) {
     //Load player
@@ -176,23 +197,23 @@ function startFight(enemyId) {
     playerDamageText.innerText = "1d" + player.damageDie + "+" + player.damageBonus;
     playerStats.style.display = "block";
 
+    // Fix this first
     // Load enemy
-    let enemyName = enemies[enemyId].name;
-    let enemyArmor = enemies[enemyId].ac;
-    let enemyHealth = enemies[enemyId].hp;
+    let enemy = enemies[enemyId];
     let enemyActions = enemies[enemyId].actionCount;
-    enemyNameText.innerText = enemyName;
-    enemyArmorText.innerText = enemyArmor;
-    enemyHealthText.innerText = enemyHealth;
+    enemyNameText.innerText = enemy.name;
+    enemyArmorText.innerText = enemy.ac;
+    enemyHealthText.innerText = enemy.hp;
     enemyStats.style.display = "block";
 
     // Set up combat actions
     button1.onclick = () => {
-        let checkTurnEnd = attack(enemyArmor);
+        let checkTurnEnd = attack(enemy.ac);
         if (checkTurnEnd === 0) {
             text.innerHTML += "<p>3 actions spent. Passing turn.</p>";
+            text.innerHTML += "<p>The enemy takes its turn.</p>";
             while (enemyActions > 0) {
-                enemyMove(enemyActions);
+                enemyMove(enemy);
                 enemyActions--;
             }
             enemyActions = enemies[enemyId].actionCount;
@@ -229,6 +250,7 @@ function attack(enemyArmor) {
 
     player.attackMod -= 5;
     playerAttackText.innerText = `${player.attackMod >=0 ? '+' : ''}` + player.attackMod;
+    console.log(player.actionCount);
     return player.actionCount;
 }
 
@@ -236,6 +258,6 @@ function hide() {
     text.innerText = "You hide.";
 }
 
-function enemyMove(enemyActions) {
-    text.innerHTML += "<p>Enemy takes its turn.</p>";
+function enemyMove(enemy) {
+    text.innerHTML += "<p>The Wolf attacks. (1d20+" + enemy.attack  + ")</p>";
 }
