@@ -199,7 +199,10 @@ function startFight(enemyId) {
     playerHealthText.innerText = player.hp;
     playerAttackText.innerText = `${player.attackMod >=0 ? '+' : ''}` + player.attackMod;
     playerDamageText.innerText = "1d" + player.damageDie + "+" + player.damageBonus;
-    playerActionsText.innerText = "◈◈◈";
+    playerActionsText.innerText = "";
+    for (let i = 0; i < player.actionCount; i++) {
+        playerActionsText.innerText += "◈";
+    }
     playerStats.style.display = "block";
 
     // Fix this first
@@ -238,20 +241,23 @@ function startFight(enemyId) {
 // Player attacks
 function attack(enemy) {
     player.actionCount--;
-    text.innerHTML = "<p class=\"allyText\">You attack. (1d20+" + player.attackMod +")</p>";
+
+    // Attack roll
+    text.innerHTML = "<p class=\"allyText\">You attack. (1d20" + `${player.attackMod >=0 ? "+" : ""}` + player.attackMod +")</p>";
     let attackRoll = roll(20) + player.attackMod;
-    text.innerHTML += "<p class=\"allyText\">\nYou roll a " + attackRoll + ". (" + (attackRoll - player.attackMod) + "+" + player.attackMod + ")</p>";
+    text.innerHTML += "<p class=\"allyText\">\nYou roll a " + attackRoll + ". (" + (attackRoll - player.attackMod) + `${player.attackMod >=0 ? "+" : ""}` + player.attackMod + ")</p>";
     
+    // Damage roll
     if (attackRoll >= enemy.ac) {
         let damageRoll = roll(player.damageDie) + player.damageBonus;
         console.log("Damage roll: " + damageRoll);
-        if (attackRoll >= (enemy.ac) + 10) {
+        if (attackRoll >= (enemy.ac + 10)) {
             text.innerHTML += "<p class=\"allyText\">You got a critical hit!</p>";
-            text.innerHTML += "<p class=\"allyText\">You deal " + (damageRoll*2) + " damage. 2x(1d" + player.damageDie + `${player.attackMod >=0 ? "+" : "-"}` + player.damageBonus + ")</p>";
+            text.innerHTML += "<p class=\"allyText\">You deal " + (damageRoll*2) + " damage. 2x(1d" + player.damageDie + "+" + player.damageBonus + ")</p>";
             enemy.hp -= (damageRoll * 2);
         } else {
             text.innerHTML += "<p class=\"allyText\">You hit!</p>";
-            text.innerHTML += "<p class=\"allyText\">You deal " + damageRoll + " damage. (1d" + player.damageDie + `${player.attackMod >=0 ? "+" : "-"}` + player.damageBonus + ")</p>";
+            text.innerHTML += "<p class=\"allyText\">You deal " + damageRoll + " damage. (1d" + player.damageDie + "+" + player.damageBonus + ")</p>";
             enemy.hp -= damageRoll;
         }
         enemyHealthText.innerText = enemy.hp;
@@ -259,9 +265,14 @@ function attack(enemy) {
         text.innerHTML += "<p class=\"allyText\">You miss!</p>";
     }
 
+    // After action cleanup
     player.attackMod -= 5;
     playerAttackText.innerText = `${player.attackMod >=0 ? '+' : ''}` + player.attackMod;
     console.log("Player actions: " + player.actionCount);
+    playerActionsText.innerText = "";
+    for (let i = 0; i < player.actionCount; i++) {
+        playerActionsText.innerText += "◈";
+    }
     return player.actionCount;
 }
 
@@ -270,12 +281,23 @@ function hide() {
 }
 
 function enemyMove(enemy) {
-    text.innerHTML += "<p class=\"enemyText\">The Wolf attacks. (1d20+" + enemy.attackMod + ")</p>";
+    // Attack roll
+    text.innerHTML += "<p class=\"enemyText\">The Wolf attacks. (1d20" + `${enemy.attackMod >=0 ? "+" : ""}` + enemy.attackMod + ")</p>";
     let attackRoll = roll(20) + enemy.attackMod;
-    text.innerHTML += "<p class=\"enemyText\">It rolls a " + attackRoll + ".</p>";
+    text.innerHTML += "<p class=\"enemyText\">It rolls a " + attackRoll + ". (" + (attackRoll - enemy.attackMod) + `${enemy.attackMod >=0 ? "+" : ""}` + enemy.attackMod +  ")</p>";
     enemy.attackMod -= 5;
     if (attackRoll >= player.ac) {
-        text.innerHTML += "<p class=\"enemyText\">Hit!</p>";
+        let damageRoll = roll(enemy.damageDie) + enemy.damageBonus;
+        if (attackRoll >= (player.ac + 10)) {
+            text.innerHTML += "<p class=\"enemyText\">A critical hit!</p>";
+            text.innerHTML += "<p class=\"enemyText\">It deals " + (damageRoll*2) + " damage. 2x(1d" + enemy.damageDie + "+" + enemy.damageBonus + ")</p>";
+            player.hp -= (damageRoll * 2);
+        } else {
+            text.innerHTML += "<p class=\"enemyText\">Hit!</p>";
+            text.innerHTML += "<p class=\"enemyText\">It deals " + damageRoll + " damage. (1d" + enemy.damageDie + "+" + enemy.damageBonus + ")</p>";
+            player.hp -= damageRoll;
+        }
+        playerHealthText.innerText = player.hp;
     } else {
         text.innerHTML += "<p class=\"enemyText\">Miss!</p>";
     }
