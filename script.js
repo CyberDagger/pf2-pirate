@@ -29,6 +29,8 @@ const text1 = "<p>You are a wandering adventurer visiting Otari, a small town on
 
 const text13 = "<p>Noticing the tracks leading to the cave, you hide in the nearby underbrush, hoping to ambush whatever foul beast lives here. After just a few minutes, you hear the sounds of something approaching, and the scent of wet fur hangs heavy in the air.</p><p>Emerging from the bushes is a lean, mangy wolf carrying the body of a dead chicken in its maw. It appears to be returning home after its most recent hunt. Clearly, this is the beast that’s been preying upon the farmers’ animals. You wait until it is near then draw your shortsword and spring out to attack!</p><div class=\"instruction\"><p>You are now in combat with a wolf! You know that this feral beast cannot be tamed and must be slain to keep the farmers’ livestock safe. Both you and the wolf take turns attacking one another. You attack by rolling the 20-sided die (or d20 for short) and adding your attack bonus (which represents your skill at wielding a weapon). If the total is equal to or greater than the wolf’s Armor Class (AC for short), then the attack is a hit and deals damage. Subtract the damage from the wolf’s Hit Points (HP for short). To defeat the wolf, you must reduce the wolf to 0 HP or less. On the wolf’s turn, it will attack you—you’ll roll a d20 for the wolf, add its attack bonus, and compare the result to your AC. If the wolf reduces you to 0 HP or less, you die.</p><p>Remember that you go first. If you find that the wolf is hitting you too much, you should remember to hide with your third action to make it harder for the wolf to hit you.</p></div>"
 
+const text17 = "<p>Your vision grows dark as life leaves your body. In your final moments, you can’t help but think that this is not how stories should end. Maybe the next hero will fare better in this deadly place...</p><p>Although you have died, there are still adventures to be had. You can start this adventure over by clicking the button. You are restored to full Hit Points, but so are all of the foes that you have faced. You must explore and face whatever dangers await you all over again. Alternatively, you can start making your own character to play in adventures with others. The full rules can be read at <a href=\"https://2e.aonprd.com/\">Archives of Nethys</a>.</p>"
+
 /*--------------*/
 /* Game Objects */
 /*--------------*/
@@ -189,6 +191,16 @@ function go13() {
     let combatResult = startFight(0);
 }
 
+function go17() {
+    // Update text field
+    text.innerHTML = text17;
+    button1.innerText = "Try Again";
+    button1.onclick = startGame;
+    button2.style.display = "none";
+    button3.style.display = "none";
+    button4.style.display = "none";
+}
+
 /*------------------------*/
 /* Combat Logic Functions */
 /*------------------------*/
@@ -222,13 +234,24 @@ function startFight(enemyId) {
             player.attackMod = player.attack;
             playerAttackText.innerText = `${player.attackMod >=0 ? "+" : ""}` + player.attackMod;
             text.innerHTML += "<p>The enemy takes its turn.</p>";
+            enemy.attackMod = enemy.attack;
             console.log("Enemy actions: " + enemyActions);
-            while (enemyActions > 0) {
+            while (enemyActions > 0 && player.hp > 0) {
                 enemyMove(enemy);
                 enemyActions--;
                 console.log("Enemy actions: " + enemyActions);
+                
             }
             enemyActions = enemies[enemyId].actionCount;
+            player.actionCount = 3;
+            playerActionsText.innerText = "";
+            for (let i = 0; i < player.actionCount; i++) {
+                playerActionsText.innerText += "◈";
+            }
+            if (player.hp <= 0) {
+                return;
+            }
+            text.innerHTML += "<p>Your turn.</p>"
         }
     }
     button2.onclick = hide;
@@ -298,6 +321,11 @@ function enemyMove(enemy) {
             player.hp -= damageRoll;
         }
         playerHealthText.innerText = player.hp;
+        if (player.hp <= 0) {
+            player.hp = 0;
+            playerHealthText.innerText = player.hp;
+            go17();
+        }
     } else {
         text.innerHTML += "<p class=\"enemyText\">Miss!</p>";
     }

@@ -2,6 +2,10 @@ body {
     background-color: darkblue;
   }
   
+  a {
+    color: aqua;
+  }
+
   #text {
     background-color: black;
     color: white;
