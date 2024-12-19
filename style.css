@@ -2,68 +2,93 @@ body {
     background-color: darkblue;
   }
   
-  a {
-    color: aqua;
-  }
+a {
+  color: aqua;
+}
 
-  #text {
-    background-color: black;
-    color: white;
-    padding: 10px;
-    text-indent: 15px;
-  }
+#window {
+  display: flex;
+}
 
-  .instruction {
-    background-color: #303030;
-    color: LightSalmon;
-    padding: 1px 20px;
-  }
+#text {
+  background-color: black;
+  color: white;
+  padding: 10px;
+  text-indent: 15px;
+}
 
-  .allyText {
-    color: lime;
-  }
+#combatText {
+  background-color: black;
+  color: white;
+  padding: 10px;
+  text-indent: 15px;
+  max-height: 700px;
+  overflow-y: scroll;
+  overflow-anchor: auto;
+}
 
-  .enemyText {
-    color: red;
-  }
-  
-  #game {
-    max-width: 500px;
-    max-height: 800px;
-    background-color: lightgray;
-    color: white;
-    margin: 0 auto;
-    padding: 10px;
-  }
-  
-  #controls {
-    text-align:center;
-    border: 1px black solid;
-    padding: 5px;
-  }
-  
-  #stats {
-    border: 1px black solid;
-    color: black;
-    padding: 5px;
-  }
-  
-  #playerStats {
-    display: none;
-    border: 1px black solid;
-    color: white;
-    padding: 5px;
-    background-color: green;
-  }
+.instruction {
+  background-color: #303030;
+  color: LightSalmon;
+  padding: 1px 20px;
+}
 
-  #enemyStats {
-    display: none;
-    border: 1px black solid;
-    color: white;
-    padding: 5px;
-    background-color: crimson;
-  }
-  
-  .stat {
-    padding-right: 10px;
-  }
+.allyText {
+  color: lime;
+}
+
+.enemyText {
+  color: red;
+}
+
+#game {
+  max-width: 500px;
+  max-height: 800px;
+  background-color: lightgray;
+  color: white;
+  margin: 0 auto;
+  padding: 10px;
+  flex: 1;
+}
+
+#combat {
+  max-width: 300px;
+  max-height: 800px;
+  background-color: lightgray;
+  color: white;
+  margin: 0 auto;
+  padding: 10px;
+  flex: 1;
+}
+
+#controls {
+  text-align:center;
+  border: 1px black solid;
+  padding: 5px;
+}
+
+#stats {
+  border: 1px black solid;
+  color: black;
+  padding: 5px;
+}
+
+#playerStats {
+  display: block;
+  border: 1px black solid;
+  color: white;
+  padding: 5px;
+  background-color: green;
+}
+
+#enemyStats {
+  display: block;
+  border: 1px black solid;
+  color: white;
+  padding: 5px;
+  background-color: crimson;
+}
+
+.stat {
+  padding-right: 10px;
+}

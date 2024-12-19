@@ -8,31 +8,40 @@
 </head>
 
 <body onload="startGame()">
-<div id="game">
-  <div id="stats">
-    <span class="stat">HP: <strong><span id="healthText"></span></strong></span>
-    <span class="stat">Coin: <strong><span id="goldText"></span></strong></span>
-    <span class="inventory">Inventory: <strong><span id="inventoryText"></span></strong></span>
+<div id="window">
+  <div id="game">
+    <div id="stats">
+      <span class="stat">HP: <strong><span id="healthText"></span></strong></span>
+      <span class="stat">Coin: <strong><span id="goldText"></span></strong></span>
+      <span class="inventory">Inventory: <strong><span id="inventoryText"></span></strong></span>
+    </div>
+    <div id="controls">
+      <button id="button1">dummy</button>
+      <button id="button2">dummy</button>
+      <button id="button3">dummy</button>
+      <button id="button4">dummy</button>
+    </div>
+    <div id="text"></div>
   </div>
-  <div id="playerStats">
-    <span class="stat">AC: <strong><span id="playerArmor"></span></strong></span>
-    <span class="stat">HP: <strong><span id="playerHealth"></span></strong></span>
-    <span class="stat">Attack Bonus: <strong><span id="playerAttack"></span></strong></span>
-    <span class="stat">Damage: <strong><span id="playerDamage"></span></strong></span>
-    <span class="stat">Actions: <strong><span id="playerActions"></span></strong></span>
+  <div id="combat">
+    <div id="playerStats">
+      <div>
+      <span class="stat">AC: <strong><span id="playerArmor"></span></strong></span>
+      <span class="stat">HP: <strong><span id="playerHealth"></span></strong></span>
+      <span class="stat">Actions: <strong><span id="playerActions"></span></strong></span>
+      </div>
+      <div>
+      <span class="stat">Attack Bonus: <strong><span id="playerAttack"></span></strong></span>
+      <span class="stat">Damage: <strong><span id="playerDamage"></span></strong></span>
+      </div>
+    </div>
+    <div id="enemyStats">
+      <span class="stat">Enemy Name: <strong><span id="enemyName"></span></strong></span>
+      <span class="stat">AC: <strong><span id="enemyArmor"></span></strong></span>
+      <span class="stat">HP: <strong><span id="enemyHealth"></span></strong></span>
+    </div>
+    <div id="combatText"></div>
   </div>
-  <div id="enemyStats">
-    <span class="stat">Enemy Name: <strong><span id="enemyName"></span></strong></span>
-    <span class="stat">AC: <strong><span id="enemyArmor"></span></strong></span>
-    <span class="stat">HP: <strong><span id="enemyHealth"></span></strong></span>
-  </div>
-  <div id="controls">
-    <button id="button1">dummy</button>
-    <button id="button2">dummy</button>
-    <button id="button3">dummy</button>
-    <button id="button4">dummy</button>
-  </div>
-  <div id="text"></div>
 </div>
 <script  src="script.js"></script>
 </body>

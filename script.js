@@ -8,6 +8,7 @@ const button2 = document.querySelector("#button2");
 const button3 = document.querySelector("#button3");
 const button4 = document.querySelector("#button4");
 const text = document.querySelector("#text");
+const combatText = document.querySelector("#combatText");
 const healthText = document.querySelector("#healthText");
 const goldText = document.querySelector("#goldText");
 const inventoryText = document.querySelector("#inventoryText");
@@ -26,6 +27,8 @@ const enemyArmorText = document.querySelector("#enemyArmor");
 const text0 = "Hello, world!"
 
 const text1 = "<p>You are a wandering adventurer visiting Otari, a small town on the coast of the Starstone Isle, an enormous island magically raised out of the ocean by an ancient god. Otari is renowned for its lumber and fine wooden boats, but that's not what brought you here—you came looking for adventure!</p><p>Word has it that a vicious beast is preying upon the town's livestock, and the mayor has offered 10 gold coins to any hero who can put an end to the menace. That kind of money would pay your expenses for a month!</p><p>After asking around at a nearby tavern called the Crow's Casks, you learn that most of the attacks occur on the west side of town, not far from the shore. That seems like the best place to start your search.</p><p>You gather up your belongings and make your way out along the rocky beach to begin your hunt. It doesn't take long for you to find the entrance to a dark and mysterious cave. Large paw prints lead to and from the gloomy opening.</p>"
+
+const text7 = "<p>You leap aside, avoiding the wolf’s snarling jaws and drive your sword deep into its flank. With a yowl, the wretched creature falls into the muck and goes still. You clean off your blade then wander into the cave to make sure that this wolf was the only one.</p><p>As your eyes adjust to the gloom, you find yourself inside a small cavern that was obviously the beast’s home. It stinks of wet fur, and there are scraps of rotting meat and bone lying about—evidence of its previous victims. Far more interesting, though, is what you spot at the back of the cave.</p><p>A crack in the far wall leads into darkness, and just above it, scratched into stone, is a symbol that looks a lot like a treasure chest. As you draw closer, you realize the crack is actually the entrance to an underground tunnel—it might just be the hiding place of some forgotten treasure.</p>"
 
 const text13 = "<p>Noticing the tracks leading to the cave, you hide in the nearby underbrush, hoping to ambush whatever foul beast lives here. After just a few minutes, you hear the sounds of something approaching, and the scent of wet fur hangs heavy in the air.</p><p>Emerging from the bushes is a lean, mangy wolf carrying the body of a dead chicken in its maw. It appears to be returning home after its most recent hunt. Clearly, this is the beast that’s been preying upon the farmers’ animals. You wait until it is near then draw your shortsword and spring out to attack!</p><div class=\"instruction\"><p>You are now in combat with a wolf! You know that this feral beast cannot be tamed and must be slain to keep the farmers’ livestock safe. Both you and the wolf take turns attacking one another. You attack by rolling the 20-sided die (or d20 for short) and adding your attack bonus (which represents your skill at wielding a weapon). If the total is equal to or greater than the wolf’s Armor Class (AC for short), then the attack is a hit and deals damage. Subtract the damage from the wolf’s Hit Points (HP for short). To defeat the wolf, you must reduce the wolf to 0 HP or less. On the wolf’s turn, it will attack you—you’ll roll a d20 for the wolf, add its attack bonus, and compare the result to your AC. If the wolf reduces you to 0 HP or less, you die.</p><p>Remember that you go first. If you find that the wolf is hitting you too much, you should remember to hide with your third action to make it harder for the wolf to hit you.</p></div>"
 
@@ -82,6 +85,7 @@ const enemies = [
     {
         name: "Wolf",
         ac: 14,
+        maxHp: 15,
         hp: 15,
         attack: 5,
         attackMod: 5,
@@ -94,6 +98,7 @@ const enemies = [
         name: "Snake",
         ac: 15,
         hp: 8,
+        maxHp: 8,
         attack: 8,
         attackMod: 8,
         damageDie: 4,
@@ -105,6 +110,7 @@ const enemies = [
         name: "Statue",
         ac: 18,
         hp: 20,
+        maxHp: 20,
         attack: 9,
         attackMod: 9,
         damageDie: 8,
@@ -151,6 +157,11 @@ function startGame() {
     player.silver = 0;
     player.copper = 0;
 
+    // Reset enemies
+    for (let i = 0; i < enemies.length; i++) {
+        enemies[i].hp = enemies[i].maxHp;
+    }
+
     // Render window
     healthText.innerText = player.hp;
     goldText.innerText = player.gold + " gold, " + player.silver + " silver, " + player.copper + " copper";
@@ -159,6 +170,7 @@ function startGame() {
     button3.style.display = "none";
     button4.style.display = "none";
     button1.innerText = "Begin";
+    combatText.innerText = "";
     text.innerHTML = text1;
 }
 
@@ -182,18 +194,34 @@ function roll(die) {
 /* Scene Transition Functions */
 /*----------------------------*/
 
+function go7() {
+    // Clear combat interface
+    combatText.innerHTML += "";
+    // Update text field
+    text.innerHTML = text7;
+    // Update buttons
+    button1.innerText = "Squeeze through the Crack";
+    button2.innerText = "Head Back to Town";
+    button1.onclick = startGame;
+    button1.onclick = startGame;
+    button3.style.display = "none";
+    button4.style.display = "none";
+}
+
 function go13() {
     // Update text field
     text.innerHTML = text13;
-
     // Combat initialization
     player.attackMod = 7;
     let combatResult = startFight(0);
 }
 
 function go17() {
+    // Clear combat interface
+    combatText.innerHTML += "";
     // Update text field
     text.innerHTML = text17;
+    // Update buttons
     button1.innerText = "Try Again";
     button1.onclick = startGame;
     button2.style.display = "none";
@@ -230,10 +258,10 @@ function startFight(enemyId) {
     button1.onclick = () => {
         let checkTurnEnd = attack(enemy);
         if (checkTurnEnd === 0) {
-            text.innerHTML += "<p>3 actions spent. Passing turn.</p>";
+            combatText.innerHTML += "<p>3 actions spent. Passing turn.</p>";
             player.attackMod = player.attack;
             playerAttackText.innerText = `${player.attackMod >=0 ? "+" : ""}` + player.attackMod;
-            text.innerHTML += "<p>The enemy takes its turn.</p>";
+            combatText.innerHTML += "<p>The enemy takes its turn.</p>";
             enemy.attackMod = enemy.attack;
             console.log("Enemy actions: " + enemyActions);
             while (enemyActions > 0 && player.hp > 0) {
@@ -251,7 +279,11 @@ function startFight(enemyId) {
             if (player.hp <= 0) {
                 return;
             }
-            text.innerHTML += "<p>Your turn.</p>"
+            combatText.innerHTML += "<p>Your turn.</p>"
+        }
+        combatText.scrollTo(0, combatText.scrollHeight);
+        if (enemy.hp <=0) {
+            go7();
         }
     }
     button2.onclick = hide;
@@ -266,26 +298,29 @@ function attack(enemy) {
     player.actionCount--;
 
     // Attack roll
-    text.innerHTML = "<p class=\"allyText\">You attack. (1d20" + `${player.attackMod >=0 ? "+" : ""}` + player.attackMod +")</p>";
+    combatText.innerHTML += "<p class=\"allyText\">You attack. (1d20" + `${player.attackMod >=0 ? "+" : ""}` + player.attackMod +")</p>";
     let attackRoll = roll(20) + player.attackMod;
-    text.innerHTML += "<p class=\"allyText\">\nYou roll a " + attackRoll + ". (" + (attackRoll - player.attackMod) + `${player.attackMod >=0 ? "+" : ""}` + player.attackMod + ")</p>";
+    combatText.innerHTML += "<p class=\"allyText\">\nYou roll a " + attackRoll + ". (" + (attackRoll - player.attackMod) + `${player.attackMod >=0 ? "+" : ""}` + player.attackMod + ")</p>";
     
     // Damage roll
     if (attackRoll >= enemy.ac) {
         let damageRoll = roll(player.damageDie) + player.damageBonus;
         console.log("Damage roll: " + damageRoll);
         if (attackRoll >= (enemy.ac + 10)) {
-            text.innerHTML += "<p class=\"allyText\">You got a critical hit!</p>";
-            text.innerHTML += "<p class=\"allyText\">You deal " + (damageRoll*2) + " damage. 2x(1d" + player.damageDie + "+" + player.damageBonus + ")</p>";
+            combatText.innerHTML += "<p class=\"allyText\">You got a critical hit!</p>";
+            combatText.innerHTML += "<p class=\"allyText\">You deal " + (damageRoll*2) + " damage. 2x(1d" + player.damageDie + "+" + player.damageBonus + ")</p>";
             enemy.hp -= (damageRoll * 2);
         } else {
-            text.innerHTML += "<p class=\"allyText\">You hit!</p>";
-            text.innerHTML += "<p class=\"allyText\">You deal " + damageRoll + " damage. (1d" + player.damageDie + "+" + player.damageBonus + ")</p>";
+            combatText.innerHTML += "<p class=\"allyText\">You hit!</p>";
+            combatText.innerHTML += "<p class=\"allyText\">You deal " + damageRoll + " damage. (1d" + player.damageDie + "+" + player.damageBonus + ")</p>";
             enemy.hp -= damageRoll;
+        }
+        if (enemy.hp < 0) {
+            enemy.hp = 0;
         }
         enemyHealthText.innerText = enemy.hp;
     } else {
-        text.innerHTML += "<p class=\"allyText\">You miss!</p>";
+        combatText.innerHTML += "<p class=\"allyText\">You miss!</p>";
     }
 
     // After action cleanup
@@ -300,33 +335,36 @@ function attack(enemy) {
 }
 
 function hide() {
-    text.innerText = "You hide.";
+    combatText.innerText = "You hide.";
 }
 
 function enemyMove(enemy) {
     // Attack roll
-    text.innerHTML += "<p class=\"enemyText\">The Wolf attacks. (1d20" + `${enemy.attackMod >=0 ? "+" : ""}` + enemy.attackMod + ")</p>";
+    combatText.innerHTML += "<p class=\"enemyText\">The Wolf attacks. (1d20" + `${enemy.attackMod >=0 ? "+" : ""}` + enemy.attackMod + ")</p>";
     let attackRoll = roll(20) + enemy.attackMod;
-    text.innerHTML += "<p class=\"enemyText\">It rolls a " + attackRoll + ". (" + (attackRoll - enemy.attackMod) + `${enemy.attackMod >=0 ? "+" : ""}` + enemy.attackMod +  ")</p>";
+    combatText.innerHTML += "<p class=\"enemyText\">It rolls a " + attackRoll + ". (" + (attackRoll - enemy.attackMod) + `${enemy.attackMod >=0 ? "+" : ""}` + enemy.attackMod +  ")</p>";
     enemy.attackMod -= 5;
     if (attackRoll >= player.ac) {
         let damageRoll = roll(enemy.damageDie) + enemy.damageBonus;
         if (attackRoll >= (player.ac + 10)) {
-            text.innerHTML += "<p class=\"enemyText\">A critical hit!</p>";
-            text.innerHTML += "<p class=\"enemyText\">It deals " + (damageRoll*2) + " damage. 2x(1d" + enemy.damageDie + "+" + enemy.damageBonus + ")</p>";
+            combatText.innerHTML += "<p class=\"enemyText\">A critical hit!</p>";
+            combatText.innerHTML += "<p class=\"enemyText\">It deals " + (damageRoll*2) + " damage. 2x(1d" + enemy.damageDie + "+" + enemy.damageBonus + ")</p>";
             player.hp -= (damageRoll * 2);
         } else {
-            text.innerHTML += "<p class=\"enemyText\">Hit!</p>";
-            text.innerHTML += "<p class=\"enemyText\">It deals " + damageRoll + " damage. (1d" + enemy.damageDie + "+" + enemy.damageBonus + ")</p>";
+            combatText.innerHTML += "<p class=\"enemyText\">Hit!</p>";
+            combatText.innerHTML += "<p class=\"enemyText\">It deals " + damageRoll + " damage. (1d" + enemy.damageDie + "+" + enemy.damageBonus + ")</p>";
             player.hp -= damageRoll;
         }
         playerHealthText.innerText = player.hp;
         if (player.hp <= 0) {
             player.hp = 0;
             playerHealthText.innerText = player.hp;
-            go17();
         }
     } else {
-        text.innerHTML += "<p class=\"enemyText\">Miss!</p>";
+        combatText.innerHTML += "<p class=\"enemyText\">Miss!</p>";
+    }
+    combatText.scrollTo(0, combatText.scrollHeight);
+    if (player.hp == 0) {
+        go17();
     }
 }
