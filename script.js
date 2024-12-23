@@ -37,9 +37,11 @@ const text17 = "<p>Your vision grows dark as life leaves your body. In your fina
 // Player object
 const player = {
     // Basic values
+    acBase: 18,
     ac: 18,
+    hpMax: 20,
     hp: 20,
-    attack: 7,
+    attackBase: 7,
     attackMod: 7,
     damageDie: 6,
     damageBonus: 3,
@@ -56,12 +58,15 @@ const player = {
     gold: 0,
     silver: 0,
     copper: 0,
+    // Auxiliary variables
+    hidden: false,
 
     // Methods
     // Reset values on game restart
     reset() {
-        this.hp = 20;
-        this.attackMod = this.attack;
+        this.ac = this.acBase;
+        this.hp = this.hpMax;
+        this.attackMod = this.attackBase;
         this.actionCount = this.actions;
         this.inventory = ["Shortsword"];
         this.gold = 0;
@@ -73,16 +78,19 @@ const player = {
         let lastAction = (this.actionCount === 0);
         playerActionsText.innerText = "";
         for (let i = 0; i < this.actionCount; i++) {
-            playerActionsText.innerText;
+            playerActionsText.innerText += "◈";
         }
         return lastAction;
     },
-    resetActions() {
+    resetTurn() {
         this.actionCount = this.actions;
         this.updateActions();
+        this.hidden = false;
+        this.ac = this.acBase;
+        playerArmorText.innerText = this.ac;
     },
     resetMap() {
-        this.attackMod = this.attack;
+        this.attackMod = this.attackBase;
         playerAttackText.innerText = `${this.attackMod >=0 ? "+" : ""}` + this.attackMod;
     },
     passTurn() {
@@ -125,7 +133,20 @@ const player = {
         playerAttackText.innerText = `${this.attackMod >=0 ? '+' : ''}` + this.attackMod;
         return this.updateActions();
     },
-    hide() {}
+    hide() {
+        if (this.hidden) {
+            combatText.innerHTML += "<p>You are already hidden. Fight back against the Wolf!</p>";
+            scrollLog();
+        } else {
+            this.actionCount--;
+            this.hidden = true;
+            this.ac += 2;
+            playerArmorText.innerText = this.ac;
+            combatText.innerHTML += "<p class=\"allyText\">You hide in the nearby bushes, making it harder for the Wolf to hit you.</p>";
+            scrollLog();
+            return this.updateActions();
+        }
+    }
 }
 
 // Combat variables
@@ -137,71 +158,70 @@ class Enemy {
     constructor(name, ac, hp, attack, damageDie, damageBonus) {
         this.name = name;
         this.ac = ac;
+        this.maxHp = hp;
         this.hp = hp;
-        this.attack = attack;
+        this.attackBase = attack;
+        this.attackMod = attack;
         this.damageDie = damageDie;
         this.damageBonus = damageBonus;
         this.actionCount = 3;
-        this.actions = [];
+    }
+
+    loseHp(amount) {
+        this.hp -= amount;
+        if (this.hp < 0) {
+            this.hp = 0
+        }
+        enemyHealthText.innerText = this.hp;
+    }
+    resetActions() {
+        this.actionCount = 3;
+        this.attackMod = this.attackBase;
+    }
+    takeTurn() {
+        this.resetActions();
+        while (this.actionCount > 0) {
+            this.attack();
+            if (player.hp === 0) {
+                console.log("YOU DIED");
+                return;
+            }
+        }
+        this.passTurn();
+    }
+    passTurn() {
+        combatText.innerHTML += "<p>Your turn!</p>";
+        scrollLog();
+    }
+    attack() {
+        this.actionCount--;
+        // Attack roll
+        combatText.innerHTML += "<p class=\"enemyText\">The " + this.name +" attacks. (1d20" + `${this.attackMod >=0 ? "+" : ""}` + this.attackMod + ")</p>";
+        let attackRoll = roll(20) + this.attackMod;
+        combatText.innerHTML += "<p class=\"enemyText\">It rolls a " + attackRoll + ". (" + (attackRoll - this.attackMod) + `${this.attackMod >=0 ? "+" : ""}` + this.attackMod +  ")</p>";
+        this.attackMod -= 5;
+        // Damage roll if hit
+        if (attackRoll >= player.ac) {
+            let damageRoll = roll(this.damageDie) + this.damageBonus;
+            if (attackRoll >= player.ac + 10) {
+                combatText.innerHTML += "<p class=\"enemyText\">A critical hit!</p>";
+                combatText.innerHTML += "<p class=\"enemyText\">It deals " + (damageRoll*2) + " damage. 2x(1d" + this.damageDie + "+" + this.damageBonus + ")</p>";
+                player.loseHp(damageRoll * 2);
+            } else {
+                combatText.innerHTML += "<p class=\"enemyText\">Hit!</p>";
+                combatText.innerHTML += "<p class=\"enemyText\">It deals " + damageRoll + " damage. (1d" + this.damageDie + "+" + this.damageBonus + ")</p>";
+                player.loseHp(damageRoll);
+            }
+        } else {
+            combatText.innerHTML += "<p class=\"enemyText\">Miss!</p>";
+        }
+        scrollLog();
     }
 }
 
 // Enemy list
 const enemies = [
-    {
-        name: "Wolf",
-        ac: 14,
-        maxHp: 15,
-        hp: 15,
-        attack: 5,
-        attackMod: 5,
-        damageDie: 6,
-        damageBonus: 2,
-        actionCount: 3,
-        loseHp(amount) {
-            this.hp -= amount;
-            if (this.hp < 0) {
-                this.hp = 0
-            }
-            enemyHealthText.innerText = this.hp;
-        },
-        resetActions() {
-            this.actionCount = 3;
-            this.attackMod = this.attack;
-        },
-        takeTurn() {
-            this.resetActions();
-            while (this.actionCount > 0) {
-                this.attack();
-            }
-            this.passTurn();
-        },
-        passTurn() {},
-        attack() {
-            this.actionCount--;
-            // Attack roll
-            combatText.innerHTML += "<p class=\"enemyText\">The Wolf attacks. (1d20" + `${this.attackMod >=0 ? "+" : ""}` + this.attackMod + ")</p>";
-            let attackRoll = roll(20) + this.attackMod;
-            combatText.innerHTML += "<p class=\"enemyText\">It rolls a " + attackRoll + ". (" + (attackRoll - this.attackMod) + `${this.attackMod >=0 ? "+" : ""}` + this.attackMod +  ")</p>";
-            this.attackMod -= 5;
-            // Damage roll if hit
-            if (attackRoll >= player.ac) {
-                let damageRoll = roll(this.damageDie) + this.damageBonus;
-                if (attackRoll >= player.ac + 10) {
-                    combatText.innerHTML += "<p class=\"enemyText\">A critical hit!</p>";
-                    combatText.innerHTML += "<p class=\"enemyText\">It deals " + (damageRoll*2) + " damage. 2x(1d" + this.damageDie + "+" + this.damageBonus + ")</p>";
-                    player.loseHp(damageRoll * 2);
-                } else {
-                    combatText.innerHTML += "<p class=\"enemyText\">Hit!</p>";
-                    combatText.innerHTML += "<p class=\"enemyText\">It deals " + damageRoll + " damage. (1d" + this.damageDie + "+" + this.damageBonus + ")</p>";
-                    player.loseHp(damageRoll);
-                }
-            } else {
-                combatText.innerHTML += "<p class=\"enemyText\">Miss!</p>";
-            }
-            scrollLog();
-        }
-    },
+    new Enemy("Wolf", 14, 15, 5, 6, 2),
     {
         name: "Snake",
         ac: 15,
@@ -288,6 +308,10 @@ function roll(die) {
     return Math.floor(Math.random() * die) + 1;
 }
 
+function scrollLog() {
+    combatText.scrollTo(0, combatText.scrollHeight);
+}
+
 /*----------------------------*/
 /* Scene Transition Functions */
 /*----------------------------*/
@@ -338,9 +362,7 @@ function startFight(enemyId) {
     playerAttackText.innerText = `${player.attackMod >=0 ? '+' : ''}` + player.attackMod;
     playerDamageText.innerText = "1d" + player.damageDie + "+" + player.damageBonus;
     playerActionsText.innerText = "";
-    for (let i = 0; i < player.actionCount; i++) {
-        playerActionsText.innerText += "◈";
-    }
+    player.resetTurn();
     playerStats.style.display = "block";
 
     // Load enemy
@@ -354,21 +376,31 @@ function startFight(enemyId) {
     button1.onclick = () => {
         let checkTurnEnd = player.attack(enemy);
         console.log("Player actions: " + checkTurnEnd);
+        if (enemy.hp === 0) {
+            player.resetTurn();
+            go7();
+        }
         if (checkTurnEnd) {
             player.passTurn();
             enemy.takeTurn();
+            player.resetTurn();
+            if (player.hp === 0) {
+                go17();
+            }
         }
     }
-    button2.onclick = hide;
+    button2.onclick = () => {
+        let checkTurnEnd = player.hide();
+        if (checkTurnEnd) {
+            player.passTurn();
+            enemy.takeTurn();
+            player.resetTurn();
+            if (player.hp === 0) {
+                go17();
+            }
+        }
+    }
     button1.innerText = "Strike with Your Shortsword";
     button2.innerText = "Hide in the Bushes";
     button2.style.display = "inline-block";
-}
-
-function hide() {
-    combatText.innerText = "You hide.";
-}
-
-function scrollLog() {
-    combatText.scrollTo(0, combatText.scrollHeight);
 }
