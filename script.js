@@ -193,6 +193,7 @@ let distance;
 
 // Enemy classes
 class Enemy {
+    // Parameter prototypes
     name;
     ac;
     maxHp;
@@ -202,6 +203,7 @@ class Enemy {
     damageDie;
     damageBonus;
 
+    // Almost everything in Pathfinder has 3 actions per turn, so this value is initialized in the parent class
     actionCount = 3;
 
     loseHp(amount) {
@@ -215,6 +217,7 @@ class Enemy {
         this.actionCount = 3;
         this.attackMod = this.attackBase;
     }
+    // takeTurn is a basic conditional script to determine actions taken during turn. Default is 3 attacks, but can be overridden for more complex behavior
     takeTurn() {
         this.resetActions();
         while (this.actionCount > 0) {
@@ -230,7 +233,10 @@ class Enemy {
         combatText.innerHTML += "<p>Your turn!</p>";
         scrollLog();
     }
+    // Not all enemies will move, so the method is empty and specific enemie will override their own methods
     move() {}
+    // attackEffects is an empty method placed in the attack sequence to facilitate partial override, 
+    // should an attach have an additional effect on hit but otherwise execute the same way
     attackEffects() {}
     attack() {
         this.actionCount--;
@@ -259,7 +265,10 @@ class Enemy {
     }
 }
 
+// Specific enemies inherit traits from Enemy class
+
 class Wolf extends Enemy {
+    // Wolf class uses default behaviors, so only parameters are initialized
     name = "Wolf";
     ac = 14;
     maxHp = 15;
@@ -280,6 +289,7 @@ class Snake extends Enemy {
     damageDie = 4;
     damageBonus = 0;
 
+    // takeTurn, move, and attackEffects methods override defaults
     takeTurn() {
         this.resetActions();
         while (this.actionCount > 0) {
@@ -322,7 +332,10 @@ const enemies = [
     new Snake()
 ];
 
-// Adventure scenarios, numbered in the book
+// Adventure scenarios, numbered in the book.
+// Unused for now, will be useful after refactoring.
+// Probably in a different structure, though,
+// but an useful reminder for now.
 const scenes = [
     {
         id: "scene1",
@@ -370,6 +383,7 @@ function startGame() {
     combatText.innerText = "";
     text.innerHTML = text1;
 
+    // Note to self, verify if this function fully deprecates the code above
     writeLogHud();
 }
 
@@ -383,10 +397,13 @@ function roll(die) {
     return Math.floor(Math.random() * die) + 1;
 }
 
+// Call this function to scroll the log to the end
+// Use after actors take actions in combat
 function scrollLog() {
     combatText.scrollTo(0, combatText.scrollHeight);
 }
 
+// Writes stats above combat log
 function writeLogHud() {
     playerArmorText.innerText = player.ac;
     playerHealthText.innerText = player.hp;
