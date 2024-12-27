@@ -193,6 +193,15 @@ let distance;
 
 // Enemy classes
 class Enemy {
+    name;
+    ac;
+    maxHp;
+    hp;
+    attackBase;
+    attackMod;
+    damageDie;
+    damageBonus;
+
     actionCount = 3;
 
     loseHp(amount) {
