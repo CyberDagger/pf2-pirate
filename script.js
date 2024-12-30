@@ -39,6 +39,10 @@ const text17 = "<p>Your vision grows dark as life leaves your body. In your fina
 const text18 = "<p>Putting aside your fear, you squeeze your way through the crack into the narrow passageway beyond, lit only by faint light from above. If the cobwebs and dust are any indication, no one has been down this way for a long time. Up ahead, the passageway widens to form a cave chamber before veering to the left.</p><p>A curtain of moss grows on the right wall of the small cavern, fed by a trickle of water dripping from the cavern ceiling. Something about it looks odd, but you can’t quite figure it out without succeeding at a Perception check.</p><div class=\"instruction\"><p>Your Perception indicates how good you are at noticing things. To attempt a Perception check, roll a d20 and add your <strong>Perception</strong> bonus, which is a <strong>+4</strong>. Once you have rolled, compare the total to the <strong>Difficulty Class</strong> (DC). If your result is equal to or greater than the DC, you succeed!</p></div>"
 const text21 = "<p>You look around but fail to spot anything of interest. With no other way to go, you head down the corridor that leads off to the left. You notice a faint breeze as you make your way down that tunnel.</p>"
 
+// Timer definitions for repeated use. Change of these values alters every instance in which a timer is used.
+const timerShort = 500;
+const timerLong = 1000;
+
 /*--------------*/
 /* Game Objects */
 /*--------------*/
@@ -188,9 +192,6 @@ const player = {
     }
 }
 
-// Combat variables
-let distance;
-
 // Enemy classes
 class Enemy {
     // Parameter prototypes
@@ -332,6 +333,9 @@ const enemies = [
     new Snake()
 ];
 
+// Combat variables
+let distance;
+
 // Adventure scenarios, numbered in the book.
 // Unused for now, will be useful after refactoring.
 // Probably in a different structure, though,
@@ -395,6 +399,10 @@ function dummy() {
 // Dice roller
 function roll(die) {
     return Math.floor(Math.random() * die) + 1;
+}
+
+async function wait(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
 }
 
 // Call this function to scroll the log to the end
@@ -468,7 +476,8 @@ function go10() {
     startFight(1);
 }
 
-function go13() {
+async function go13() {
+    await wait(timerLong);
     // Wolf fight
     // Clear combat interface
     combatText.innerHTML = "";
