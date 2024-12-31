@@ -219,48 +219,70 @@ class Enemy {
         this.attackMod = this.attackBase;
     }
     // takeTurn is a basic conditional script to determine actions taken during turn. Default is 3 attacks, but can be overridden for more complex behavior
-    takeTurn() {
+    async takeTurn() {
+        button1.disabled = true;
+        button2.disabled = true;
+        button3.disabled = true;
+        button4.disabled = true;
         this.resetActions();
         while (this.actionCount > 0) {
             console.log("Default enemy action routine");
-            this.attack();
+            await wait(timerLong);
+            await this.attack();
             if (player.hp === 0) {
                 return;
             }
         }
         this.passTurn();
     }
-    passTurn() {
+    async passTurn() {
         combatText.innerHTML += "<p>Your turn!</p>";
         scrollLog();
+        await wait(timerShort);
+        button1.disabled = false;
+        button2.disabled = false;
+        button3.disabled = false;
+        button4.disabled = false;
     }
     // Not all enemies will move, so the method is empty and specific enemie will override their own methods
     move() {}
     // attackEffects is an empty method placed in the attack sequence to facilitate partial override, 
     // should an attach have an additional effect on hit but otherwise execute the same way
     attackEffects() {}
-    attack() {
+    async attack() {
         this.actionCount--;
         // Attack roll
+        await wait(timerShort);
         combatText.innerHTML += "<p class=\"enemyText\">The " + this.name +" attacks. (1d20" + `${this.attackMod >=0 ? "+" : ""}` + this.attackMod + ")</p>";
+        scrollLog();
         let attackRoll = roll(20) + this.attackMod;
+        await wait(timerShort);
         combatText.innerHTML += "<p class=\"enemyText\">It rolls a " + attackRoll + ". (" + (attackRoll - this.attackMod) + `${this.attackMod >=0 ? "+" : ""}` + this.attackMod +  ")</p>";
+        scrollLog();
         this.attackMod -= 5;
         // Damage roll if hit
         if (attackRoll >= player.ac) {
             let damageRoll = roll(this.damageDie) + this.damageBonus;
             if (attackRoll >= player.ac + 10) {
+                await wait(timerShort);
                 combatText.innerHTML += "<p class=\"enemyText\">A critical hit!</p>";
+                scrollLog();
+                await wait(timerShort);
                 combatText.innerHTML += "<p class=\"enemyText\">It deals " + (damageRoll*2) + " damage. 2x(1d" + this.damageDie + "+" + this.damageBonus + ")</p>";
+                scrollLog();
                 player.loseHp(damageRoll * 2);
             } else {
+                await wait(timerShort);
                 combatText.innerHTML += "<p class=\"enemyText\">Hit!</p>";
+                scrollLog();
+                await wait(timerShort);
                 combatText.innerHTML += "<p class=\"enemyText\">It deals " + damageRoll + " damage. (1d" + this.damageDie + "+" + this.damageBonus + ")</p>";
+                scrollLog();
                 player.loseHp(damageRoll);
             }
             this.attackEffects();
         } else {
-            combatText.innerHTML += "<p class=\"enemyText\">Miss!</p>";
+            await logEnemy("Miss!");
         }
         scrollLog();
     }
@@ -333,6 +355,23 @@ const enemies = [
     new Snake()
 ];
 
+//Text functions
+async function log(text) {
+    await wait(timerShort);
+    combatText.innerHTML += "<p>" + text + "</p>";
+    scrollLog();
+}
+async function logPlayer(text) {
+    await wait(timerShort);
+    combatText.innerHTML += "<p class=\"allyText\">" + text + "</p>";
+    scrollLog();
+}
+async function logEnemy(text) {
+    await wait(timerShort);
+    combatText.innerHTML += "<p class=\"enemyText\">" + text + "</p>";
+    scrollLog();
+}
+
 // Combat variables
 let distance;
 
@@ -401,6 +440,10 @@ function roll(die) {
     return Math.floor(Math.random() * die) + 1;
 }
 
+// Wait function to insert delay between messages
+// Time in miliseconds, 
+// but a short and long delay have been defined as constants at the beginning of the file
+// to ensure standardization
 async function wait(time) {
     return new Promise(resolve => setTimeout(resolve, time));
 }
