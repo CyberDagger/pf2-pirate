@@ -40,8 +40,8 @@ const text18 = "<p>Putting aside your fear, you squeeze your way through the cra
 const text21 = "<p>You look around but fail to spot anything of interest. With no other way to go, you head down the corridor that leads off to the left. You notice a faint breeze as you make your way down that tunnel.</p>"
 
 // Timer definitions for repeated use. Change of these values alters every instance in which a timer is used.
-const timerShort = 500;
-const timerLong = 1000;
+const timerShort =1000;
+const timerLong = 2000;
 
 /*--------------*/
 /* Game Objects */
@@ -106,11 +106,10 @@ const player = {
         this.attackMod = this.attackBase;
         playerAttackText.innerText = `${this.attackMod >=0 ? "+" : ""}` + this.attackMod;
     },
-    passTurn() {
-        combatText.innerHTML += "<p>3 actions spent. Passing turn.</p>";
+    async passTurn() {
+        await log("3 actions spent. Passing turn.");
         this.resetMap();
-        combatText.innerHTML += "<p>The enemy takes its turn.</p>";
-        scrollLog();
+        await log("The enemy takes its turn.");
     },
     loseHp(amount) {
         this.hp -= amount;
@@ -120,73 +119,77 @@ const player = {
         playerHealthText.innerText = this.hp;
     },
     // Skill actions
-    rollPerception(dc) {
-        combatText.innerHTML += "<p class=\"allyText\">You roll a Perception check. (1d20+" + this.perception + "</p>";
+    async rollPerception(dc) {
+        lockButtons();
+        await logPlayer("You roll a Perception check. (1d20+" + this.perception + ")");
         let skillRoll = roll(20) + this.perception;
-        combatText.innerHTML += "<p class=\"allyText\">\nYou roll a " + skillRoll + ". (" + (skillRoll - this.perception) + `${this.perception >=0 ? "+" : ""}` + this.perception + ")</p>";
+        await logPlayer("You roll a " + skillRoll + ". (" + (skillRoll - this.perception) + `${this.perception >=0 ? "+" : ""}` + this.perception + ")");
         if (skillRoll >= dc) {
-            combatText.innerHTML += "<p class=\"allyText\">You pass!</p>";
-            scrollLog();
+            await logPlayer("You pass!");
+            unlockButtons();
             return true;
         } else {
-            combatText.innerHTML += "<p class=\"allyText\">You fail.</p>";
-            scrollLog();
+            await logPlayer("You fail.");
+            unlockButtons();
             return false;
         }
     },
     // Saving throws
-    saveFortitude(dc) {
-        combatText.innerHTML += "<p class=\"allyText\">You roll a Fortitude save. (1d20+" + this.fortitude + "</p>";
+    async saveFortitude(dc) {
+        lockButtons();
+        await logPlayer("You roll a Fortitude save. (1d20+" + this.fortitude + ")");
         let saveRoll = roll(20) + this.fortitude;
-        combatText.innerHTML += "<p class=\"allyText\">\nYou roll a " + saveRoll + ". (" + (saveRoll - this.fortitude) + `${this.fortitude >=0 ? "+" : ""}` + this.fortitude + ")</p>";
+        await logPlayer("You roll a " + saveRoll + ". (" + (saveRoll - this.fortitude) + `${this.fortitude >=0 ? "+" : ""}` + this.fortitude + ")");
         if (saveRoll >= dc) {
-            combatText.innerHTML += "<p class=\"allyText\">You pass!</p>";
-            scrollLog();
+            await logPlayer("You pass!");
+            unlockButtons();
             return true;
         } else {
-            combatText.innerHTML += "<p class=\"allyText\">You fail.</p>";
-            scrollLog();
+            await logPlayer("You fail.");
+            unlockButtons();
             return false;
         }
     },
     // Combat actions
-    attack(enemy) {
-        this.actionCount--, 2000;
+    async attack(enemy) {
+        lockButtons();
+        this.actionCount--;
         // Attack roll
-        combatText.innerHTML += "<p class=\"allyText\">You attack. (1d20" + `${this.attackMod >=0 ? "+" : ""}` + this.attackMod +")</p>";
+        await logPlayer("You attack. (1d20" + `${this.attackMod >=0 ? "+" : ""}` + this.attackMod +")");
         let attackRoll = roll(20) + this.attackMod;
-        combatText.innerHTML += "<p class=\"allyText\">\nYou roll a " + attackRoll + ". (" + (attackRoll - this.attackMod) + `${this.attackMod >=0 ? "+" : ""}` + this.attackMod + ")</p>", 2000;
+        await logPlayer("You roll a " + attackRoll + ". (" + (attackRoll - this.attackMod) + `${this.attackMod >=0 ? "+" : ""}` + this.attackMod + ")");
         // Damage roll if hit
         if (attackRoll >= enemy.ac) {
             let damageRoll = roll(this.damageDie) + this.damageBonus;
             if (attackRoll >= (enemy.ac + 10)) {
-                combatText.innerHTML += "<p class=\"allyText\">You got a critical hit!</p>";
-                combatText.innerHTML += "<p class=\"allyText\">You deal " + (damageRoll*2) + " damage. 2x(1d" + this.damageDie + "+" + this.damageBonus + ")</p>";
+                await logPlayer("You got a critical hit!");
+                await logPlayer("You deal " + (damageRoll*2) + " damage. 2x(1d" + this.damageDie + "+" + this.damageBonus + ")");
                 enemy.loseHp(damageRoll * 2);
             } else {
-                combatText.innerHTML += "<p class=\"allyText\">You hit!</p>";
-                combatText.innerHTML += "<p class=\"allyText\">You deal " + damageRoll + " damage. (1d" + this.damageDie + "+" + this.damageBonus + ")</p>";
+                await logPlayer("You hit!");
+                await logPlayer("You deal " + damageRoll + " damage. (1d" + this.damageDie + "+" + this.damageBonus + ")");
                 enemy.loseHp(damageRoll);
             }
         } else {
-            combatText.innerHTML += "<p class=\"allyText\">You miss!</p>";
+            await logPlayer("You miss!");
         }
-        scrollLog();
         this.attackMod -= 5;
         playerAttackText.innerText = `${this.attackMod >=0 ? '+' : ''}` + this.attackMod;
+        unlockButtons();
         return this.updateActions();
     },
-    hide() {
+    async hide() {
+        lockButtons();
         if (this.hidden) {
-            combatText.innerHTML += "<p>You are already hidden. Fight back against the Wolf!</p>";
-            scrollLog();
+            await log("You are already hidden. Fight back against the Wolf!");
+            unlockButtons();
         } else {
             this.actionCount--;
             this.hidden = true;
             this.ac += 2;
             playerArmorText.innerText = this.ac;
-            combatText.innerHTML += "<p class=\"allyText\">You hide in the nearby bushes, making it harder for the Wolf to hit you.</p>";
-            scrollLog();
+            await logPlayer("You hide in the nearby bushes, making it harder for the Wolf to hit you.");
+            unlockButtons();
             return this.updateActions();
         }
     }
@@ -220,10 +223,7 @@ class Enemy {
     }
     // takeTurn is a basic conditional script to determine actions taken during turn. Default is 3 attacks, but can be overridden for more complex behavior
     async takeTurn() {
-        button1.disabled = true;
-        button2.disabled = true;
-        button3.disabled = true;
-        button4.disabled = true;
+        lockButtons();
         this.resetActions();
         while (this.actionCount > 0) {
             console.log("Default enemy action routine");
@@ -236,48 +236,32 @@ class Enemy {
         this.passTurn();
     }
     async passTurn() {
-        combatText.innerHTML += "<p>Your turn!</p>";
-        scrollLog();
+        await log("Your turn!");
         await wait(timerShort);
-        button1.disabled = false;
-        button2.disabled = false;
-        button3.disabled = false;
-        button4.disabled = false;
+        unlockButtons();
     }
     // Not all enemies will move, so the method is empty and specific enemie will override their own methods
-    move() {}
+    async move() {}
     // attackEffects is an empty method placed in the attack sequence to facilitate partial override, 
     // should an attach have an additional effect on hit but otherwise execute the same way
-    attackEffects() {}
+    async attackEffects() {}
     async attack() {
         this.actionCount--;
         // Attack roll
-        await wait(timerShort);
-        combatText.innerHTML += "<p class=\"enemyText\">The " + this.name +" attacks. (1d20" + `${this.attackMod >=0 ? "+" : ""}` + this.attackMod + ")</p>";
-        scrollLog();
+        await logEnemy("The " + this.name +" attacks. (1d20" + `${this.attackMod >=0 ? "+" : ""}` + this.attackMod + ")");
         let attackRoll = roll(20) + this.attackMod;
-        await wait(timerShort);
-        combatText.innerHTML += "<p class=\"enemyText\">It rolls a " + attackRoll + ". (" + (attackRoll - this.attackMod) + `${this.attackMod >=0 ? "+" : ""}` + this.attackMod +  ")</p>";
-        scrollLog();
+        await logEnemy("It rolls a " + attackRoll + ". (" + (attackRoll - this.attackMod) + `${this.attackMod >=0 ? "+" : ""}` + this.attackMod +  ")");
         this.attackMod -= 5;
         // Damage roll if hit
         if (attackRoll >= player.ac) {
             let damageRoll = roll(this.damageDie) + this.damageBonus;
             if (attackRoll >= player.ac + 10) {
-                await wait(timerShort);
                 combatText.innerHTML += "<p class=\"enemyText\">A critical hit!</p>";
-                scrollLog();
-                await wait(timerShort);
-                combatText.innerHTML += "<p class=\"enemyText\">It deals " + (damageRoll*2) + " damage. 2x(1d" + this.damageDie + "+" + this.damageBonus + ")</p>";
-                scrollLog();
+                await logEnemy("It deals " + (damageRoll*2) + " damage. 2x(1d" + this.damageDie + "+" + this.damageBonus + ")");
                 player.loseHp(damageRoll * 2);
             } else {
-                await wait(timerShort);
-                combatText.innerHTML += "<p class=\"enemyText\">Hit!</p>";
-                scrollLog();
-                await wait(timerShort);
-                combatText.innerHTML += "<p class=\"enemyText\">It deals " + damageRoll + " damage. (1d" + this.damageDie + "+" + this.damageBonus + ")</p>";
-                scrollLog();
+                await logEnemy("Hit!");
+                await logEnemy("It deals " + damageRoll + " damage. (1d" + this.damageDie + "+" + this.damageBonus + ")");
                 player.loseHp(damageRoll);
             }
             this.attackEffects();
@@ -313,7 +297,7 @@ class Snake extends Enemy {
     damageBonus = 0;
 
     // takeTurn, move, and attackEffects methods override defaults
-    takeTurn() {
+    async takeTurn() {
         this.resetActions();
         while (this.actionCount > 0) {
             console.log("Snake distance: " + distance);
@@ -327,23 +311,23 @@ class Snake extends Enemy {
             }
         }
     }
-    move() {
+    async move() {
         this.actionCount--;
-        combatText.innerHTML += "<p class=\"enemyText\">The " + this.name + " slithers 20 feet towards you.</p>";
+        await logEnemy("The " + this.name + " slithers 20 feet towards you.");
         distance -= 20;
         if (distance < 0) {
             distance = 0;
         }
         updateDistance();
     }
-    attackEffects() {
-        combatText.innerHTML += "<p class=\"enemyText\">The Snake's venom starts working its way through your body.</p>";
+    async attackEffects() {
+        await logEnemy("The Snake's venom starts working its way through your body.</p>");
         if (player.saveFortitude(16)) {
-            combatText.innerHTML += "<p class=\"allyText\">You manage to fight off the worst of it.</p>";
+            await logEnemy("You manage to fight off the worst of it.");
         } else {
-            combatText.innerHTML += "<p class=\"enemyText\">The venom burns through your flesh.</p>";
+            await logEnemy("The venom burns through your flesh.");
             let venomDamage = roll(8);
-            combatText.innerHTML += "<p class=\"enemyText\">It deals " + venomDamage + " (1d8) damage to you.</p>";
+            await logEnemy("It deals " + venomDamage + " (1d8) damage to you.");
             player.loseHp(venomDamage);
         }
     }
@@ -370,6 +354,20 @@ async function logEnemy(text) {
     await wait(timerShort);
     combatText.innerHTML += "<p class=\"enemyText\">" + text + "</p>";
     scrollLog();
+}
+
+// Button switch
+function lockButtons() {
+    button1.disabled = true;
+    button2.disabled = true;
+    button3.disabled = true;
+    button4.disabled = true;
+}
+function unlockButtons() {
+    button1.disabled = false;
+    button2.disabled = false;
+    button3.disabled = false;
+    button4.disabled = false;
 }
 
 // Combat variables
@@ -520,7 +518,6 @@ function go10() {
 }
 
 async function go13() {
-    await wait(timerLong);
     // Wolf fight
     // Clear combat interface
     combatText.innerHTML = "";
@@ -588,7 +585,7 @@ function go24() {
 /* Combat Logic Functions */
 /*------------------------*/
 
-function startFight(enemyId) {
+async function startFight(enemyId) {
     //Load player
     playerArmorText.innerText = player.ac;
     playerHealthText.innerText = player.hp;
@@ -608,11 +605,12 @@ function startFight(enemyId) {
     // Set up combat actions
     // Attack action
     button1.innerText = "Attack with Your Shortsword";
-    button1.onclick = () => {
-        let checkTurnEnd = player.attack(enemy);
+    button1.onclick = async () => {
+        let checkTurnEnd = await player.attack(enemy);
         console.log("Player actions: " + checkTurnEnd);
         if (enemy.hp === 0) {
             player.resetTurn();
+            await wait(timerLong);
             go7();
         }
         if (checkTurnEnd) {
@@ -620,6 +618,7 @@ function startFight(enemyId) {
             enemy.takeTurn();
             player.resetTurn();
             if (player.hp === 0) {
+                await wait(timerLong);
                 go17();
             }
         }
@@ -627,8 +626,8 @@ function startFight(enemyId) {
     // If player can do something other than attack, this handles it
     if (enemyId === 0) {
         button2.innerText = "Hide in the Bushes";
-        button2.onclick = () => {
-            let checkTurnEnd = player.hide();
+        button2.onclick = async () => {
+            let checkTurnEnd = await player.hide();
             if (checkTurnEnd) {
                 player.passTurn();
                 enemy.takeTurn();
@@ -645,7 +644,7 @@ function startFight(enemyId) {
     }
     // Initiative exceptions. Snake goes first.
     if (enemyId === 1) {
-        enemy.takeTurn();
+        await enemy.takeTurn();
         if (player.hp === 0) {
             go17();
         }
