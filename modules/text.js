@@ -1,3 +1,7 @@
+/*---------------------*/
+/* Section Flavor Text */
+/*---------------------*/
+
 // Long text strings assigned to constants for readability
 const sceneText = [
     "0",

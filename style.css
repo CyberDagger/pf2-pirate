@@ -37,10 +37,14 @@ a {
 
 .allyText {
   color: lime;
+  background-color: #223823;
+  padding: 5px 0px;
 }
 
 .enemyText {
   color: red;
+  background-color: #382422;
+  padding: 5px 0px;
 }
 
 #game {

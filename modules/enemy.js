@@ -1,3 +1,8 @@
+/*-------------------------*/
+/* Enemy Class Definitions */
+/*-------------------------*/
+
+// Module imports
 import {combatText, enemyHealthText} from "./DOMelements.js";
 import {timerShort, timerLong} from "./time.js";
 import {wait, scrollLog, log, logEnemy, lockButtons, unlockButtons} from "./logOperators.js";
@@ -19,6 +24,7 @@ class Enemy {
     // Almost everything in Pathfinder has 3 actions per turn, so this value is initialized in the parent class
     actionCount = 3;
 
+    // Internal value modification methods
     loseHp(amount) {
         this.hp -= amount;
         if (this.hp < 0) {
@@ -30,6 +36,7 @@ class Enemy {
         this.actionCount = 3;
         this.attackMod = this.attackBase;
     }
+
     // takeTurn is a basic conditional script to determine actions taken during turn. Default is 3 attacks, but can be overridden for more complex behavior
     async takeTurn() {
         lockButtons();
@@ -83,8 +90,8 @@ class Enemy {
 
 // Specific enemies inherit traits from Enemy class
 
+// Wolf class uses default behaviors, so only parameters are initialized
 class Wolf extends Enemy {
-    // Wolf class uses default behaviors, so only parameters are initialized
     name = "Wolf";
     ac = 14;
     maxHp = 15;
@@ -95,6 +102,8 @@ class Wolf extends Enemy {
     damageBonus = 2;
 }
 
+// Snake class has an initial round of movement,
+// and has a poison effect on the attack
 class Snake extends Enemy {
     name = "Snake";
     ac = 15;

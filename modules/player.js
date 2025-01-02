@@ -1,10 +1,11 @@
-import {playerHealthText, playerArmorText, playerAttackText, playerActionsText} from "./DOMelements.js";
-import {wait, scrollLog, log, logPlayer, lockButtons, unlockButtons} from "./logOperators.js";
-import roll from "./dice.js";
-
 /*--------*/
 /* Player */
 /*--------*/
+
+// Module imports
+import {playerHealthText, playerArmorText, playerAttackText, playerActionsText} from "./DOMelements.js";
+import {wait, scrollLog, log, logPlayer, lockButtons, unlockButtons} from "./logOperators.js";
+import roll from "./dice.js";
 
 // Player object
 const player = {

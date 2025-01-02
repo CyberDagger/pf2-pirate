@@ -1,3 +1,8 @@
+/*-----------------------*/
+/* Log Writing Functions */
+/*-----------------------*/
+
+// Module imports
 import {timerShort, timerLong} from "./time.js";
 
 // Wait function to insert delay between messages
