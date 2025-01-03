@@ -67,9 +67,11 @@ const player = {
         playerAttackText.innerText = `${this.attackMod >=0 ? "+" : ""}` + this.attackMod;
     },
     async passTurn() {
+        combatText.innerHTML += "<p style=\"margin-bottom:30px;\"></p>";
         await log("3 actions spent. Passing turn.");
         this.resetMap();
         await log("The enemy takes its turn.");
+        combatText.innerHTML += "<p style=\"margin-bottom:30px;\"></p>";
     },
     loseHp(amount) {
         this.hp -= amount;
@@ -114,6 +116,7 @@ const player = {
     async attack(enemy) {
         lockButtons();
         this.actionCount--;
+        combatText.innerHTML += "<p style=\"margin-bottom:30px;\"></p>";
         // Attack roll
         await logPlayer("You attack. (1d20" + `${this.attackMod >=0 ? "+" : ""}` + this.attackMod +")");
         let attackRoll = roll(20) + this.attackMod;

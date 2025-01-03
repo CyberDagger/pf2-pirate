@@ -52,6 +52,7 @@ class Enemy {
         this.passTurn();
     }
     async passTurn() {
+        combatText.innerHTML += "<p style=\"margin-bottom:30px;\"></p>";
         await log("Your turn!");
         await wait(timerShort);
         unlockButtons();
