@@ -70,6 +70,7 @@ const player = {
         combatText.innerHTML += "<p style=\"margin-bottom:30px;\"></p>";
         await log("3 actions spent. Passing turn.");
         this.resetMap();
+        combatText.innerHTML += "<p style=\"margin-bottom:30px;\"></p>";
         await log("The enemy takes its turn.");
         combatText.innerHTML += "<p style=\"margin-bottom:30px;\"></p>";
     },

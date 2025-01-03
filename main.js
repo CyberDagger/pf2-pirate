@@ -110,7 +110,7 @@ function updateDistance() {
 /* Scene Transition Functions */
 /*----------------------------*/
 
-function go7() {
+async function go7() {
     // Clear combat interface
     combatText.innerHTML = "";
     // Update text field
@@ -124,7 +124,7 @@ function go7() {
     button4.style.display = "none";
 }
 
-function go9() {
+async function go9() {
     // Clear combat interface
     combatText.innerHTML = "";
     // Update text field
@@ -137,7 +137,7 @@ function go9() {
     button4.style.display = "none";
 }
 
-function go10() {
+async function go10() {
     console.log("Distance: " + distance)
     // Snake fight
     // Clear combat interface
@@ -160,7 +160,7 @@ async function go13() {
     startFight(0);
 }
 
-function go17() {
+async function go17() {
     // Clear combat interface
     combatText.innerHTML = "";
     // Update text field
@@ -173,7 +173,7 @@ function go17() {
     button4.style.display = "none";
 }
 
-function go18() {
+async function go18() {
     // Clear combat interface
     combatText.innerHTML = "";
     // Set skill DC
@@ -196,7 +196,7 @@ function go18() {
     button4.style.display = "none";
 }
 
-function go21() {
+async function go21() {
     // Clear combat interface
     combatText.innerHTML = "";
     // Update text field
@@ -209,7 +209,7 @@ function go21() {
     button4.style.display = "none";
 }
 
-function go24() {
+async function go24() {
     // To be implemented
 }
 

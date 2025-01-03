@@ -64,6 +64,7 @@ class Enemy {
     async attackEffects() {}
     async attack() {
         this.actionCount--;
+        combatText.innerHTML += "<p style=\"margin-bottom:30px;\"></p>";
         // Attack roll
         await logEnemy("The " + this.name +" attacks. (1d20" + `${this.attackMod >=0 ? "+" : ""}` + this.attackMod + ")");
         let attackRoll = roll(20) + this.attackMod;
