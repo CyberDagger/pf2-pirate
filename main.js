@@ -195,8 +195,6 @@ async function go17() {
     button4.style.display = "none";
 }
 
-// Failed perception check doesn't advance scene.
-// Top priority debug.
 async function go18() {
     // Clear combat interface
     combatText.innerHTML = "";

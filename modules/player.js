@@ -6,6 +6,7 @@
 import {playerHealthText, playerArmorText, playerAttackText, playerActionsText} from "./DOMelements.js";
 import {wait, scrollLog, log, logPlayer, lockButtons, unlockButtons} from "./logOperators.js";
 import roll from "./dice.js";
+import { timerLong, timerShort } from "./time.js";
 
 // Player object
 const player = {
@@ -89,10 +90,12 @@ const player = {
         await logPlayer("You roll a " + skillRoll + ". (" + (skillRoll - this.perception) + `${this.perception >=0 ? "+" : ""}` + this.perception + ")");
         if (skillRoll >= dc) {
             await logPlayer("You pass!");
+            await wait(timerLong);
             unlockButtons();
             return true;
         } else {
             await logPlayer("You fail.");
+            await wait(timerLong);
             unlockButtons();
             console.log("The false value should be returned here.");
             return false;
