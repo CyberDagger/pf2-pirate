@@ -5,6 +5,7 @@ import roll from "./modules/dice.js";
 import player from "./modules/player.js";
 import {Wolf, Snake} from "./modules/enemy.js";
 import {wait, scrollLog, log, logPlayer, logEnemy, lockButtons, unlockButtons} from "./modules/logOperators.js";
+import gameState from "./modules/gameState.js";
 
 document.addEventListener("DOMContentLoaded", startGame);
 
@@ -17,9 +18,6 @@ const enemies = [
     new Wolf(),
     new Snake()
 ];
-
-// Combat variables
-let distance;
 
 // Adventure scenarios, numbered in the book.
 // Unused for now, will be useful after refactoring.
@@ -48,7 +46,7 @@ const scenes = [
 function startGame() {
     // Window variables
     button1.onclick = go13;
-    button2.onclick = dummy;
+    button2.onclick = go10;
     button3.onclick = dummy;
     button4.onclick = dummy;
 
@@ -59,16 +57,18 @@ function startGame() {
     for (let i = 0; i < enemies.length; i++) {
         enemies[i].hp = enemies[i].maxHp;
     }
-    distance = 40;
+    gameState.distance = 0;
 
     // Render window
     healthText.innerText = player.hp;
     goldText.innerText = player.gold + " gold, " + player.silver + " silver, " + player.copper + " copper";
     inventoryText.innerText = player.inventory[0];
-    button2.style.display = "none";
+    //button2.style.display = "none";
+    button2.style.display = "inline-block";
     button3.style.display = "none";
     button4.style.display = "none";
     button1.innerText = "Begin";
+    button2.innerText = "Skip to Snake";
     combatText.innerText = "";
     text.innerHTML = sceneText[1];
 
@@ -92,15 +92,7 @@ function writeLogHud() {
     playerReflexText.innerText = "+" + player.reflex;
     playerPerceptionText.innerText = "+" + player.perception;
     playerAthleticsText.innerText = "+" + player.athletics;
-    updateDistance();
-}
-
-function updateDistance() {
-    distanceGraph.innerText = "P";
-    for (let i = distance / 5; i > 0; i--) {
-        distanceGraph.innerText += "-";
-    }
-    distanceGraph.innerText += "E";
+    gameState.updateDistance();
 }
 
 /*----------------------------*/
@@ -156,7 +148,9 @@ async function go9() {
 }
 
 async function go10() {
-    console.log("Distance: " + distance)
+    gameState.distance = 40;
+    console.log("Distance: " + gameState.distance);
+    writeLogHud();
     // Snake fight
     // Clear combat interface
     combatText.innerHTML = "";
@@ -271,7 +265,7 @@ async function startFight(enemyId) {
             go7();
         }
         if (checkTurnEnd) {
-            player.passTurn();
+            await player.passTurn();
             enemy.takeTurn();
             player.resetTurn();
             if (player.hp === 0) {
@@ -286,7 +280,7 @@ async function startFight(enemyId) {
         button2.onclick = async () => {
             let checkTurnEnd = await player.hide();
             if (checkTurnEnd) {
-                player.passTurn();
+                await player.passTurn();
                 enemy.takeTurn();
                 player.resetTurn();
                 if (player.hp === 0) {

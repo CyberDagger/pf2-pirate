@@ -8,6 +8,7 @@ import {timerShort, timerLong} from "./time.js";
 import {wait, scrollLog, log, logEnemy, lockButtons, unlockButtons} from "./logOperators.js";
 import roll from "./dice.js";
 import player from "./player.js";
+import gameState from "./gameState.js";
 
 // Enemy classes
 class Enemy {
@@ -74,7 +75,7 @@ class Enemy {
         if (attackRoll >= player.ac) {
             let damageRoll = roll(this.damageDie) + this.damageBonus;
             if (attackRoll >= player.ac + 10) {
-                combatText.innerHTML += "<p class=\"enemyText\">A critical hit!</p>";
+                await logEnemy("A critical hit!");
                 await logEnemy("It deals " + (damageRoll*2) + " damage. 2x(1d" + this.damageDie + "+" + this.damageBonus + ")");
                 player.loseHp(damageRoll * 2);
             } else {
@@ -82,7 +83,7 @@ class Enemy {
                 await logEnemy("It deals " + damageRoll + " damage. (1d" + this.damageDie + "+" + this.damageBonus + ")");
                 player.loseHp(damageRoll);
             }
-            this.attackEffects();
+            await this.attackEffects();
         } else {
             await logEnemy("Miss!");
         }
@@ -118,31 +119,35 @@ class Snake extends Enemy {
 
     // takeTurn, move, and attackEffects methods override defaults
     async takeTurn() {
+        lockButtons();
         this.resetActions();
         while (this.actionCount > 0) {
-            console.log("Snake distance: " + distance);
-            if (distance > 0) {
-                this.move();
+            console.log("Snake distance: " + gameState.distance);
+            if (gameState.distance > 0) {
+                await this.move();
             } else {
-                this.attack();
+                await this.attack();
                 if (player.hp === 0) {
                     return;
                 }
             }
         }
+        this.passTurn();
     }
     async move() {
         this.actionCount--;
         await logEnemy("The " + this.name + " slithers 20 feet towards you.");
-        distance -= 20;
-        if (distance < 0) {
-            distance = 0;
+        console.log("Snake moving. Current distance: " + gameState.distance + " feet.");
+        gameState.distance -= 20;
+        if (gameState.distance < 0) {
+            gameState.distance = 0;
         }
-        updateDistance();
+        console.log("Snake has moved. Current distance: " + gameState.distance + " feet.");
+        gameState.updateDistance();
     }
     async attackEffects() {
         await logEnemy("The Snake's venom starts working its way through your body.</p>");
-        if (player.saveFortitude(16)) {
+        if (await player.saveFortitude(16)) {
             await logEnemy("You manage to fight off the worst of it.");
         } else {
             await logEnemy("The venom burns through your flesh.");
