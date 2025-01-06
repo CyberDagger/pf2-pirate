@@ -7,9 +7,6 @@ import {Wolf, Snake} from "./modules/enemy.js";
 import {wait, scrollLog, log, logPlayer, logEnemy, lockButtons, unlockButtons} from "./modules/logOperators.js";
 
 document.addEventListener("DOMContentLoaded", startGame);
-/*-------------*/
-/* UI Elements */
-/*-------------*/
 
 /*--------------*/
 /* Game Objects */
@@ -110,6 +107,14 @@ function updateDistance() {
 /* Scene Transition Functions */
 /*----------------------------*/
 
+// The original Pirate King's Plunder is in the form of a choose your own adventure book.
+// If I was making the adventure from scratch, I would use a more fitting structure for a fully blind game,
+// but I feel it would be more work than it's worth to do so here.
+
+async function go5() {
+
+}
+
 async function go7() {
     // Clear combat interface
     combatText.innerHTML = "";
@@ -122,6 +127,19 @@ async function go7() {
     button2.onclick = go9;
     button3.style.display = "none";
     button4.style.display = "none";
+}
+
+    // Do next
+async function go8() {
+    // Clear combat interface
+    combatText.innerHTML = "";
+    // Update text field
+    text.innerHTML = sceneText[8];
+    // Update buttons
+    button1.innerText = "Go Left";
+    button1.onclick = go15;
+    button2.innerText = "Go Right";
+    button2.onclick = go5;
 }
 
 async function go9() {
@@ -160,6 +178,10 @@ async function go13() {
     startFight(0);
 }
 
+async function go15() {
+
+}
+
 async function go17() {
     // Clear combat interface
     combatText.innerHTML = "";
@@ -173,6 +195,8 @@ async function go17() {
     button4.style.display = "none";
 }
 
+// Failed perception check doesn't advance scene.
+// Top priority debug.
 async function go18() {
     // Clear combat interface
     combatText.innerHTML = "";
@@ -182,12 +206,14 @@ async function go18() {
     text.innerHTML = sceneText[18];
     // Update buttons
     button1.innerText = "Roll Perception";
-    button1.onclick = () => {
-        if (player.rollPerception(dc)) {
+    button1.onclick = async () => {
+        if (await player.rollPerception(dc)) {
             // To be implemented
+            console.log("Player passed Perception check. Step 24 not yet implemented.");
             go24();
         } else {
             // Implementing
+            console.log("Player failed Perception check. Moving to step 21.");
             go21();
         }
     };
@@ -197,6 +223,7 @@ async function go18() {
 }
 
 async function go21() {
+    console.log("Initiating step 21...");
     // Clear combat interface
     combatText.innerHTML = "";
     // Update text field

@@ -94,6 +94,7 @@ const player = {
         } else {
             await logPlayer("You fail.");
             unlockButtons();
+            console.log("The false value should be returned here.");
             return false;
         }
     },
@@ -105,10 +106,12 @@ const player = {
         await logPlayer("You roll a " + saveRoll + ". (" + (saveRoll - this.fortitude) + `${this.fortitude >=0 ? "+" : ""}` + this.fortitude + ")");
         if (saveRoll >= dc) {
             await logPlayer("You pass!");
+            await wait(timerShort);
             unlockButtons();
             return true;
         } else {
             await logPlayer("You fail.");
+            await wait(timerShort);
             unlockButtons();
             return false;
         }
