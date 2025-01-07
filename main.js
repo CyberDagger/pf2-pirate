@@ -104,7 +104,7 @@ function writeLogHud() {
 // but I feel it would be more work than it's worth to do so here.
 
 async function go5() {
-    console.log("Not yet implemented")
+    console.log("Not yet implemented");
 }
 
 async function go7() {
@@ -174,7 +174,7 @@ async function go13() {
 }
 
 async function go15() {
-
+    console.log("Not yet implemented");
 }
 
 async function go17() {
