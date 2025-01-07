@@ -144,6 +144,7 @@ class Snake extends Enemy {
         }
         console.log("Snake has moved. Current distance: " + gameState.distance + " feet.");
         gameState.updateDistance();
+        await wait(timerShort);
     }
     async attackEffects() {
         await logEnemy("The Snake's venom starts working its way through your body.</p>");

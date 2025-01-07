@@ -104,7 +104,7 @@ function writeLogHud() {
 // but I feel it would be more work than it's worth to do so here.
 
 async function go5() {
-
+    console.log("Not yet implemented")
 }
 
 async function go7() {
@@ -132,6 +132,7 @@ async function go8() {
     button1.onclick = go15;
     button2.innerText = "Go Right";
     button2.onclick = go5;
+    button2.style.display = "inline-block";
 }
 
 async function go9() {
@@ -262,7 +263,11 @@ async function startFight(enemyId) {
         if (enemy.hp === 0) {
             player.resetTurn();
             await wait(timerLong);
-            go7();
+            if (enemyId === 0) {
+                go7();
+            } else if (enemyId === 1) {
+                go8();
+            }
         }
         if (checkTurnEnd) {
             await player.passTurn();
