@@ -6,9 +6,37 @@ a {
   color: aqua;
 }
 
+
 #window {
   display: flex;
   height: 860px;
+}
+
+
+#game {
+  max-width: 600px;
+  height: 665px;
+  background-color: lightgray;
+  color: white;
+  margin: 0 auto;
+  padding: 10px;
+  flex: 1;
+}
+
+#stats {
+  border: 1px black solid;
+  color: black;
+  padding: 5px;
+}
+
+.stat {
+  padding-right: 10px;
+}
+
+#controls {
+  text-align:center;
+  border: 1px black solid;
+  padding: 5px;
 }
 
 #text {
@@ -18,61 +46,27 @@ a {
   text-indent: 15px;
 }
 
-#combatText {
-  height: 680px;
-  background-color: black;
-  color: white;
-  padding: 10px;
-  text-indent: 15px;
-  max-height: 700px;
-  overflow-y: scroll;
-  overflow-anchor: auto;
-}
-
 .instruction {
   background-color: #303030;
   color: LightSalmon;
   padding: 1px 20px;
 }
 
-.allyText {
-  color: lime;
-}
-
-.enemyText {
-  color: red;
-}
-
-#game {
-  max-width: 500px;
-  height: 840px;
-  background-color: lightgray;
-  color: white;
-  margin: 0 auto;
-  padding: 10px;
-  flex: 1;
-}
 
 #combat {
-  max-width: 300px;
-  height: 840px;
-  background-color: lightgray;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 30px;
+  max-width: 400px;
+  height: 620px;
+  border: 1px black solid;
+  background-color: gray;
   color: white;
   margin: 0 auto;
   padding: 10px;
   flex: 1;
-}
-
-#controls {
-  text-align:center;
-  border: 1px black solid;
-  padding: 5px;
-}
-
-#stats {
-  border: 1px black solid;
-  color: black;
-  padding: 5px;
+  display: none;
 }
 
 #playerStats {
@@ -91,11 +85,48 @@ a {
   background-color: crimson;
 }
 
-.stat {
-  padding-right: 10px;
-}
-
 #distanceGraph {
   display:block;
   text-align: center;
+}
+
+#enemyImage {
+  margin: auto;
+  border: 1px black solid;
+  background-color: lightblue;
+  height: 300px;
+}
+
+#enemyImage img {
+  display: block;
+  margin: auto;
+  width: 380;
+  height: 300px;
+  object-fit: contain;
+}
+
+#combatControls {
+  text-align:center;
+  border: 1px black solid;
+  padding: 5px;
+}
+
+#combatText {
+  height: 400px;
+  border: 1px black solid;
+  background-color: black;
+  color: white;
+  padding: 10px;
+  text-indent: 15px;
+  max-height: 130px;
+  overflow-y: scroll;
+  overflow-anchor: auto;
+}
+
+.allyText {
+  color: lime;
+}
+
+.enemyText {
+  color: red;
 }

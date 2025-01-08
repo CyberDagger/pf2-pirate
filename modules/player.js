@@ -4,7 +4,7 @@
 
 // Module imports
 import {playerHealthText, playerArmorText, playerAttackText, playerActionsText} from "./DOMelements.js";
-import {wait, scrollLog, log, logPlayer, lockButtons, unlockButtons} from "./logOperators.js";
+import {wait, scrollLog, log, logPlayer, lockButtons, unlockButtons, lockCombatButtons, unlockCombatButtons} from "./logOperators.js";
 import roll from "./dice.js";
 import { timerLong, timerShort } from "./time.js";
 
@@ -121,7 +121,7 @@ const player = {
     },
     // Combat actions
     async attack(enemy) {
-        lockButtons();
+        lockCombatButtons();
         this.actionCount--;
         combatText.innerHTML += "<p style=\"margin-bottom:30px;\"></p>";
         // Attack roll
@@ -145,21 +145,21 @@ const player = {
         }
         this.attackMod -= 5;
         playerAttackText.innerText = `${this.attackMod >=0 ? '+' : ''}` + this.attackMod;
-        unlockButtons();
+        unlockCombatButtons();
         return this.updateActions();
     },
     async hide() {
-        lockButtons();
+        lockCombatButtons();
         if (this.hidden) {
             await log("You are already hidden. Fight back against the Wolf!");
-            unlockButtons();
+            unlockCombatButtons();
         } else {
             this.actionCount--;
             this.hidden = true;
             this.ac += 2;
             playerArmorText.innerText = this.ac;
             await logPlayer("You hide in the nearby bushes, making it harder for the Wolf to hit you.");
-            unlockButtons();
+            unlockCombatButtons();
             return this.updateActions();
         }
     }

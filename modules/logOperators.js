@@ -4,6 +4,7 @@
 
 // Module imports
 import {timerShort, timerLong} from "./time.js";
+import { enemyImage } from "./DOMelements.js";
 
 // Wait function to insert delay between messages
 // Time in miliseconds, 
@@ -49,6 +50,23 @@ function unlockButtons() {
     button3.disabled = false;
     button4.disabled = false;
 }
+function lockCombatButtons() {
+    combatButton1.disabled = true;
+    combatButton2.disabled = true;
+}
+function unlockCombatButtons() {
+    combatButton1.disabled = false;
+    combatButton2.disabled = false;
+}
 
-export {wait, scrollLog, log, logPlayer, logEnemy, lockButtons, unlockButtons};
+function displayEnemy(enemyId) {
+    // <img src="../images/wolf.png">
+    let file;
+    if (enemyId === 0) {
+        file = "wolf";
+    }
+    enemyImage.innerHTML = "<img src=\"../images/" + file + ".png\">";
+}
+
+export {wait, scrollLog, log, logPlayer, logEnemy, lockButtons, unlockButtons, lockCombatButtons, unlockCombatButtons, displayEnemy};
 

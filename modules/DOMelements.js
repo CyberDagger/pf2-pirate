@@ -7,6 +7,9 @@ const button1 = document.querySelector("#button1");
 const button2 = document.querySelector("#button2");
 const button3 = document.querySelector("#button3");
 const button4 = document.querySelector("#button4");
+const combatButton1 = document.querySelector("#combatButton1");
+const combatButton2 = document.querySelector("#combatButton2");
+const enemyImage = document.querySelector("#enemyImage");
 const text = document.querySelector("#text");
 const combatText = document.querySelector("#combatText");
 const healthText = document.querySelector("#healthText");
@@ -28,4 +31,4 @@ const enemyHealthText = document.querySelector("#enemyHealth");
 const enemyArmorText = document.querySelector("#enemyArmor");
 const distanceGraph = document.querySelector("#distanceGraph");
 
-export {button1, button2, button3, button4, text, combatText, healthText, goldText, inventoryText, playerStats, playerHealthText, playerArmorText, playerAttackText, playerDamageText, playerActionsText, playerPerceptionText, playerAthleticsText, playerFortitudeText, playerReflexText, enemyStats, enemyNameText, enemyHealthText, enemyArmorText, distanceGraph};
+export {button1, button2, button3, button4, combatButton1, combatButton2, enemyImage, text, combatText, healthText, goldText, inventoryText, playerStats, playerHealthText, playerArmorText, playerAttackText, playerDamageText, playerActionsText, playerPerceptionText, playerAthleticsText, playerFortitudeText, playerReflexText, enemyStats, enemyNameText, enemyHealthText, enemyArmorText, distanceGraph};

@@ -1,10 +1,10 @@
-import {button1, button2, button3, button4, text, combatText, healthText, goldText, inventoryText, playerStats, playerHealthText, playerArmorText, playerAttackText, playerDamageText, playerActionsText, playerPerceptionText, playerAthleticsText, playerFortitudeText, playerReflexText, enemyStats, enemyNameText, enemyHealthText, enemyArmorText, distanceGraph} from "./modules/DOMelements.js";
+import {button1, button2, button3, button4, combatButton1, combatButton2, text, combatText, healthText, goldText, inventoryText, playerStats, playerHealthText, playerArmorText, playerAttackText, playerDamageText, playerActionsText, playerPerceptionText, playerAthleticsText, playerFortitudeText, playerReflexText, enemyStats, enemyNameText, enemyHealthText, enemyArmorText, distanceGraph} from "./modules/DOMelements.js";
 import sceneText from "./modules/text.js";
 import {timerShort, timerLong} from "./modules/time.js";
 import roll from "./modules/dice.js";
 import player from "./modules/player.js";
 import {Wolf, Snake} from "./modules/enemy.js";
-import {wait, scrollLog, log, logPlayer, logEnemy, lockButtons, unlockButtons} from "./modules/logOperators.js";
+import {wait, scrollLog, log, logPlayer, logEnemy, lockButtons, unlockButtons, displayEnemy} from "./modules/logOperators.js";
 import gameState from "./modules/gameState.js";
 
 document.addEventListener("DOMContentLoaded", startGame);
@@ -68,7 +68,7 @@ function startGame() {
     button3.style.display = "none";
     button4.style.display = "none";
     button1.innerText = "Begin";
-    button2.innerText = "Skip to Snake";
+    button2.innerText = "Skip to Test";
     combatText.innerText = "";
     text.innerHTML = sceneText[1];
 
@@ -170,7 +170,13 @@ async function go13() {
     text.innerHTML = sceneText[13];
     // Combat initialization
     player.resetTurn();
-    startFight(0);
+    button1.innerText = "Start Fight";
+    button1.onclick = async () => {
+        await startFight(0);
+    };
+    button2.style.display = "none";
+    button3.style.display = "none";
+    button4.style.display = "none";
 }
 
 async function go15() {
@@ -253,19 +259,24 @@ async function startFight(enemyId) {
     enemyArmorText.innerText = enemy.ac;
     enemyHealthText.innerText = enemy.hp;
     enemyStats.style.display = "block";
+    displayEnemy(enemyId);
 
     // Set up combat actions
     // Attack action
-    button1.innerText = "Attack with Your Shortsword";
-    button1.onclick = async () => {
+    combatButton1.innerText = "Attack with Your Shortsword";
+    combatButton1.onclick = async () => {
         let checkTurnEnd = await player.attack(enemy);
         console.log("Player actions: " + checkTurnEnd);
         if (enemy.hp === 0) {
             player.resetTurn();
             await wait(timerLong);
             if (enemyId === 0) {
+                unlockButtons();
+                combat.style.display = "none";
                 go7();
             } else if (enemyId === 1) {
+                unlockButtons();
+                combat.style.display = "none";
                 go8();
             }
         }
@@ -275,34 +286,47 @@ async function startFight(enemyId) {
             player.resetTurn();
             if (player.hp === 0) {
                 await wait(timerLong);
+                unlockButtons();
+                combat.style.display = "none";
                 go17();
             }
         }
     }
     // If player can do something other than attack, this handles it
     if (enemyId === 0) {
-        button2.innerText = "Hide in the Bushes";
-        button2.onclick = async () => {
+        combatButton2.innerText = "Hide in the Bushes";
+        combatButton2.onclick = async () => {
             let checkTurnEnd = await player.hide();
             if (checkTurnEnd) {
                 await player.passTurn();
                 enemy.takeTurn();
                 player.resetTurn();
                 if (player.hp === 0) {
+                    await wait(timerLong);
+                    unlockButtons();
+                    combat.style.display = "none";
                     go17();
                 }
             }
         }
-        button2.style.display = "inline-block";
+        combatButton2.style.display = "inline-block";
     } else {
-        button2.onclick = dummy;
-        button2.style.display = "none";
+        combatButton2.onclick = dummy;
+        combatButton2.style.display = "none";
     }
     // Initiative exceptions. Snake goes first.
     if (enemyId === 1) {
         await enemy.takeTurn();
         if (player.hp === 0) {
+            await wait(timerLong);
+            unlockButtons();
+            combat.style.display = "none";
             go17();
         }
     }
+
+    // Open combat window
+    lockButtons();
+    await wait(timerShort);
+    combat.style.display = "block";
 }
