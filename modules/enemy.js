@@ -5,7 +5,7 @@
 // Module imports
 import {combatText, enemyHealthText} from "./DOMelements.js";
 import {timerShort, timerLong} from "./time.js";
-import {wait, scrollLog, log, logEnemy, lockButtons, unlockButtons} from "./logOperators.js";
+import {wait, scrollLog, log, logEnemy, lockCombatButtons, unlockCombatButtons} from "./logOperators.js";
 import roll from "./dice.js";
 import player from "./player.js";
 import gameState from "./gameState.js";
@@ -40,7 +40,7 @@ class Enemy {
 
     // takeTurn is a basic conditional script to determine actions taken during turn. Default is 3 attacks, but can be overridden for more complex behavior
     async takeTurn() {
-        lockButtons();
+        lockCombatButtons();
         this.resetActions();
         while (this.actionCount > 0) {
             console.log("Default enemy action routine");
@@ -56,7 +56,7 @@ class Enemy {
         combatText.innerHTML += "<p style=\"margin-bottom:30px;\"></p>";
         await log("Your turn!");
         await wait(timerShort);
-        unlockButtons();
+        unlockCombatButtons();
     }
     // Not all enemies will move, so the method is empty and specific enemie will override their own methods
     async move() {}
@@ -119,7 +119,7 @@ class Snake extends Enemy {
 
     // takeTurn, move, and attackEffects methods override defaults
     async takeTurn() {
-        lockButtons();
+        lockCombatButtons();
         this.resetActions();
         while (this.actionCount > 0) {
             console.log("Snake distance: " + gameState.distance);
