@@ -1,4 +1,4 @@
-import {button1, button2, button3, button4, combatButton1, combatButton2, text, combatText, healthText, goldText, inventoryText, playerStats, playerHealthText, playerArmorText, playerAttackText, playerDamageText, playerActionsText, playerPerceptionText, playerAthleticsText, playerFortitudeText, playerReflexText, enemyStats, enemyNameText, enemyHealthText, enemyArmorText, distanceGraph} from "./modules/DOMelements.js";
+import {button1, button2, button3, button4, combatButton1, combatButton2, text, combatText, skillText, healthText, goldText, inventoryText, playerStats, playerHealthText, playerArmorText, playerAttackText, playerDamageText, playerActionsText, playerPerceptionText, playerAthleticsText, playerFortitudeText, playerReflexText, enemyStats, enemyNameText, enemyHealthText, enemyArmorText, distanceGraph} from "./modules/DOMelements.js";
 import sceneText from "./modules/text.js";
 import {timerShort, timerLong} from "./modules/time.js";
 import roll from "./modules/dice.js";
@@ -46,7 +46,7 @@ const scenes = [
 function startGame() {
     // Window variables
     button1.onclick = go13;
-    button2.onclick = go10;
+    button2.onclick = go18;
     button3.onclick = dummy;
     button4.onclick = dummy;
 
@@ -206,6 +206,7 @@ async function go18() {
     // Update buttons
     button1.innerText = "Roll Perception";
     button1.onclick = async () => {
+        skillText.innerHTML = "";
         if (await player.rollPerception(dc)) {
             // To be implemented
             console.log("Player passed Perception check. Step 24 not yet implemented.");

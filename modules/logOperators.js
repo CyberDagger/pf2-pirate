@@ -36,6 +36,10 @@ async function logEnemy(text) {
     combatText.innerHTML += "<p class=\"enemyText\">" + text + "</p>";
     scrollLog();
 }
+async function logSkill(text) {
+    await wait(timerShort);
+    skillText.innerHTML += "<p>" + text + "</p>";
+}
 
 // Button switch
 function lockButtons() {
@@ -68,5 +72,5 @@ function displayEnemy(enemyId) {
     enemyImage.innerHTML = "<img src=\"../images/" + file + ".png\">";
 }
 
-export {wait, scrollLog, log, logPlayer, logEnemy, lockButtons, unlockButtons, lockCombatButtons, unlockCombatButtons, displayEnemy};
+export {wait, scrollLog, log, logPlayer, logEnemy, logSkill, lockButtons, unlockButtons, lockCombatButtons, unlockCombatButtons, displayEnemy};
 

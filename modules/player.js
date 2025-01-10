@@ -4,7 +4,7 @@
 
 // Module imports
 import {playerHealthText, playerArmorText, playerAttackText, playerActionsText} from "./DOMelements.js";
-import {wait, scrollLog, log, logPlayer, lockButtons, unlockButtons, lockCombatButtons, unlockCombatButtons} from "./logOperators.js";
+import {wait, scrollLog, log, logPlayer, logSkill, lockButtons, unlockButtons, lockCombatButtons, unlockCombatButtons} from "./logOperators.js";
 import roll from "./dice.js";
 import { timerLong, timerShort } from "./time.js";
 
@@ -85,16 +85,16 @@ const player = {
     // Skill actions
     async rollPerception(dc) {
         lockButtons();
-        await logPlayer("You roll a Perception check. (1d20+" + this.perception + ")");
+        await logSkill("You roll a Perception check. (1d20+" + this.perception + ")");
         let skillRoll = roll(20) + this.perception;
-        await logPlayer("You roll a " + skillRoll + ". (" + (skillRoll - this.perception) + `${this.perception >=0 ? "+" : ""}` + this.perception + ")");
+        await logSkill("You roll a " + skillRoll + ". (" + (skillRoll - this.perception) + `${this.perception >=0 ? "+" : ""}` + this.perception + ")");
         if (skillRoll >= dc) {
-            await logPlayer("You pass!");
+            await logSkill("You pass!");
             await wait(timerLong);
             unlockButtons();
             return true;
         } else {
-            await logPlayer("You fail.");
+            await logSkill("You fail.");
             await wait(timerLong);
             unlockButtons();
             console.log("The false value should be returned here.");
@@ -150,6 +150,7 @@ const player = {
     },
     async hide() {
         lockCombatButtons();
+        combatText.innerHTML += "<p style=\"margin-bottom:30px;\"></p>";
         if (this.hidden) {
             await log("You are already hidden. Fight back against the Wolf!");
             unlockCombatButtons();
