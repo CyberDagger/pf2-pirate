@@ -1,10 +1,10 @@
-import {button1, button2, button3, button4, combatButton1, combatButton2, text, combatText, skillText, healthText, goldText, inventoryText, playerStats, playerHealthText, playerArmorText, playerAttackText, playerDamageText, playerActionsText, playerPerceptionText, playerAthleticsText, playerFortitudeText, playerReflexText, enemyStats, enemyNameText, enemyHealthText, enemyArmorText, distanceGraph} from "./modules/DOMelements.js";
+import {button1, button2, button3, button4, combatButton1, combatButton2, text, combatText, skillText, healthText, goldText, inventoryText, playerStats, playerHealthText, playerArmorText, playerAttackText, playerDamageText, playerActionsText, playerPerceptionText, playerAthleticsText, playerFortitudeText, playerReflexText, enemyStats, enemyNameText, enemyHealthText, enemyArmorText, distanceGraph, skillButton} from "./modules/DOMelements.js";
 import sceneText from "./modules/text.js";
 import {timerShort, timerLong} from "./modules/time.js";
 import roll from "./modules/dice.js";
 import player from "./modules/player.js";
 import {Wolf, Snake} from "./modules/enemy.js";
-import {wait, scrollLog, log, logPlayer, logEnemy, lockButtons, unlockButtons, displayEnemy} from "./modules/logOperators.js";
+import {wait, scrollLog, log, logPlayer, logEnemy, lockButtons, unlockButtons, displayEnemy, lockSkillButtons} from "./modules/logOperators.js";
 import gameState from "./modules/gameState.js";
 
 document.addEventListener("DOMContentLoaded", startGame);
@@ -207,14 +207,25 @@ async function go18() {
     button1.innerText = "Roll Perception";
     button1.onclick = async () => {
         skillText.innerHTML = "";
+        //lockButtons();
+        //lockSkillButtons();
+        skill.style.display = "block";
         if (await player.rollPerception(dc)) {
             // To be implemented
             console.log("Player passed Perception check. Step 24 not yet implemented.");
-            go24();
+            skillButton.onclick = () => {
+                skill.style.display = "none";
+                unlockButtons();
+                go24();
+            }
         } else {
             // Implementing
             console.log("Player failed Perception check. Moving to step 21.");
-            go21();
+            skillButton.onclick = () => {
+                skill.style.display = "none";
+                unlockButtons();
+                go21();
+            }
         }
     };
     button2.style.display = "none";

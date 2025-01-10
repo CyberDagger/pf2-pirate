@@ -145,7 +145,7 @@ a {
   margin: 0 auto;
   padding: 10px;
   flex: 1;
-  display: block;
+  display: none;
 }
 
 #skillText {
@@ -156,8 +156,6 @@ a {
   padding: 10px;
   text-indent: 15px;
   max-height: 115px;
-  overflow-y: scroll;
-  overflow-anchor: auto;
 }
 
 #skillControls {

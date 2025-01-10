@@ -62,6 +62,12 @@ function unlockCombatButtons() {
     combatButton1.disabled = false;
     combatButton2.disabled = false;
 }
+function lockSkillButtons() {
+    skillButton.disabled = true;
+}
+function unlockSkillButtons() {
+    skillButton.disabled = false;
+}
 
 function displayEnemy(enemyId) {
     // <img src="../images/wolf.png">
@@ -72,5 +78,5 @@ function displayEnemy(enemyId) {
     enemyImage.innerHTML = "<img src=\"../images/" + file + ".png\">";
 }
 
-export {wait, scrollLog, log, logPlayer, logEnemy, logSkill, lockButtons, unlockButtons, lockCombatButtons, unlockCombatButtons, displayEnemy};
+export {wait, scrollLog, log, logPlayer, logEnemy, logSkill, lockButtons, unlockButtons, lockCombatButtons, unlockCombatButtons, lockSkillButtons, unlockSkillButtons, displayEnemy};
 
