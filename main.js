@@ -46,7 +46,7 @@ const scenes = [
 function startGame() {
     // Window variables
     button1.onclick = go13;
-    button2.onclick = go18;
+    button2.onclick = go10;
     button3.onclick = dummy;
     button4.onclick = dummy;
 
@@ -133,6 +133,8 @@ async function go8() {
     button2.innerText = "Go Right";
     button2.onclick = go5;
     button2.style.display = "inline-block";
+    button3.style.display = "none";
+    button4.style.display = "none";
 }
 
 async function go9() {
@@ -159,7 +161,13 @@ async function go10() {
     text.innerHTML = sceneText[10];
     // Combat initialization
     player.resetTurn();
-    startFight(1);
+    button1.innerText = "Start Fight";
+    button1.onclick = async () => {
+        await startFight(1);
+    };
+    button2.style.display = "none";
+    button3.style.display = "none";
+    button4.style.display = "none";
 }
 
 async function go13() {
@@ -273,6 +281,11 @@ async function startFight(enemyId) {
     enemyStats.style.display = "block";
     displayEnemy(enemyId);
 
+    // Open combat window
+    lockButtons();
+    await wait(timerShort);
+    combat.style.display = "block";
+
     // Set up combat actions
     // Attack action
     combatButton1.innerText = "Attack with Your Shortsword";
@@ -336,9 +349,4 @@ async function startFight(enemyId) {
             go17();
         }
     }
-
-    // Open combat window
-    lockButtons();
-    await wait(timerShort);
-    combat.style.display = "block";
 }

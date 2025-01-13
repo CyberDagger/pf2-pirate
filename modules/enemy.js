@@ -122,6 +122,7 @@ class Snake extends Enemy {
         lockCombatButtons();
         this.resetActions();
         while (this.actionCount > 0) {
+            await wait(timerLong);
             console.log("Snake distance: " + gameState.distance);
             if (gameState.distance > 0) {
                 await this.move();
@@ -136,6 +137,7 @@ class Snake extends Enemy {
     }
     async move() {
         this.actionCount--;
+        combatText.innerHTML += "<p style=\"margin-bottom:30px;\"></p>";
         await logEnemy("The " + this.name + " slithers 20 feet towards you.");
         console.log("Snake moving. Current distance: " + gameState.distance + " feet.");
         gameState.distance -= 20;

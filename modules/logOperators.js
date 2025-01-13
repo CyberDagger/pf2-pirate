@@ -74,6 +74,8 @@ function displayEnemy(enemyId) {
     let file;
     if (enemyId === 0) {
         file = "wolf";
+    } else if (enemyId === 1) {
+        file = "snake"
     }
     enemyImage.innerHTML = "<img src=\"../images/" + file + ".png\">";
 }
