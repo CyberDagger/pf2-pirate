@@ -103,6 +103,7 @@ function writeLogHud() {
 // If I was making the adventure from scratch, I would use a more fitting structure for a fully blind game,
 // but I feel it would be more work than it's worth to do so here.
 
+// Next step
 async function go5() {
     console.log("Not yet implemented");
 }
@@ -307,7 +308,7 @@ async function startFight(enemyId) {
         }
         if (checkTurnEnd) {
             await player.passTurn();
-            enemy.takeTurn();
+            await enemy.takeTurn();
             player.resetTurn();
             if (player.hp === 0) {
                 await wait(timerLong);
@@ -324,7 +325,7 @@ async function startFight(enemyId) {
             let checkTurnEnd = await player.hide();
             if (checkTurnEnd) {
                 await player.passTurn();
-                enemy.takeTurn();
+                await enemy.takeTurn();
                 player.resetTurn();
                 if (player.hp === 0) {
                     await wait(timerLong);

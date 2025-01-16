@@ -54,6 +54,9 @@ const player = {
         for (let i = 0; i < this.actionCount; i++) {
             playerActionsText.innerText += "◈";
         }
+        if (!lastAction) {
+            unlockCombatButtons();
+        }
         return lastAction;
     },
     resetTurn() {
@@ -68,6 +71,7 @@ const player = {
         playerAttackText.innerText = `${this.attackMod >=0 ? "+" : ""}` + this.attackMod;
     },
     async passTurn() {
+        lockCombatButtons();
         combatText.innerHTML += "<p style=\"margin-bottom:30px;\"></p>";
         await log("3 actions spent. Passing turn.");
         this.resetMap();
@@ -144,9 +148,10 @@ const player = {
         } else {
             await logPlayer("You miss!");
         }
+        await wait(timerShort);
         this.attackMod -= 5;
         playerAttackText.innerText = `${this.attackMod >=0 ? '+' : ''}` + this.attackMod;
-        unlockCombatButtons();
+        //unlockCombatButtons();
         return this.updateActions();
     },
     async hide() {
@@ -154,16 +159,15 @@ const player = {
         combatText.innerHTML += "<p style=\"margin-bottom:30px;\"></p>";
         if (this.hidden) {
             await log("You are already hidden. Fight back against the Wolf!");
-            unlockCombatButtons();
         } else {
             this.actionCount--;
             this.hidden = true;
             this.ac += 2;
             playerArmorText.innerText = this.ac;
             await logPlayer("You hide in the nearby bushes, making it harder for the Wolf to hit you.");
-            unlockCombatButtons();
-            return this.updateActions();
         }
+        await wait(timerShort);
+        return this.updateActions();
     }
 }
 

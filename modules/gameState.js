@@ -6,6 +6,7 @@ import {button1, button2, button3, button4, text, combatText, healthText, goldTe
 
 let gameState = {
     distance: 0,
+    
 
     updateDistance() {
         distanceGraph.innerText = "P";
