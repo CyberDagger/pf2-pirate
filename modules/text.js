@@ -14,7 +14,7 @@ const sceneText = [
     // 4
     "4",
     // 5
-    "5",
+    "<p>The burbling sound, echoing from somewhere up ahead, grows louder with every step until you can hear the sound of rushing water clearly. As you turn a corner, the source of the sound becomes apparent. The chamber up ahead is split in half by a stream that flows through the center of the room. This swift underground river enters the room from the right and flows out to the left. Across the way, you see a passageway that continues onward, and you can just make out a staircase going down. Discarded on the ground in front of you is an old torch, probably left here by a previous explorer.</p>",
     // 6
     "6",
     // 7

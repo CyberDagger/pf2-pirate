@@ -50,7 +50,7 @@ class Enemy {
                 return;
             }
         }
-        this.passTurn();
+        await this.passTurn();
     }
     async passTurn() {
         combatText.innerHTML += "<p style=\"margin-bottom:30px;\"></p>";
@@ -133,7 +133,7 @@ class Snake extends Enemy {
                 }
             }
         }
-        this.passTurn();
+        await this.passTurn();
     }
     async move() {
         this.actionCount--;

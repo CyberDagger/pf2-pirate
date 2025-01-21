@@ -51,6 +51,7 @@ function startGame() {
     button4.onclick = dummy;
 
     // Player variables
+    gameState.reset();
     player.reset();
 
     // Reset enemies
@@ -105,7 +106,24 @@ function writeLogHud() {
 
 // Next step
 async function go5() {
-    console.log("Not yet implemented");
+    // Clear combat interface
+    combatText.innerHTML = "";
+    // Update text field
+    text.innerHTML = sceneText[5];
+    // Update buttons
+    button1.innerText = "Proceed";
+    button2.innerText = "Has Lever";
+    button3.innerText = "Take Torch";
+    button1.onclick = go16;
+    button2.onclick = dummy;
+    button3.onclick = async () => {
+        button3.disabled = true;
+        gameState.takeTorch();
+    };
+    button1.style.display = "inline-block";
+    button2.style.display = "inline-block";
+    button3.style.display = "inline-block";
+    button4.style.display = "none";
 }
 
 async function go7() {
@@ -189,6 +207,10 @@ async function go13() {
 }
 
 async function go15() {
+    console.log("Not yet implemented");
+}
+
+async function go16() {
     console.log("Not yet implemented");
 }
 
@@ -294,7 +316,6 @@ async function startFight(enemyId) {
         let checkTurnEnd = await player.attack(enemy);
         console.log("Player actions: " + checkTurnEnd);
         if (enemy.hp === 0) {
-            player.resetTurn();
             await wait(timerLong);
             if (enemyId === 0) {
                 unlockButtons();
@@ -305,6 +326,7 @@ async function startFight(enemyId) {
                 combat.style.display = "none";
                 go8();
             }
+            player.resetTurn();
         }
         if (checkTurnEnd) {
             await player.passTurn();

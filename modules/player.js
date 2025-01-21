@@ -3,7 +3,7 @@
 /*--------*/
 
 // Module imports
-import {playerHealthText, playerArmorText, playerAttackText, playerActionsText} from "./DOMelements.js";
+import {playerHealthText, playerArmorText, playerAttackText, playerActionsText, inventoryText} from "./DOMelements.js";
 import {wait, scrollLog, log, logPlayer, logSkill, lockButtons, unlockButtons, lockCombatButtons, unlockCombatButtons, lockSkillButtons, unlockSkillButtons} from "./logOperators.js";
 import roll from "./dice.js";
 import { timerLong, timerShort } from "./time.js";
@@ -47,6 +47,13 @@ const player = {
         this.silver = 0;
         this.copper = 0;
     },
+    // Get item
+    pushInventory(item) {
+        this.inventory.push(item);
+        console.log(inventory);
+        inventoryText = this.inventory.toString();
+    },
+
     // Auxiliary combat methods
     updateActions() {
         let lastAction = (this.actionCount === 0);
@@ -54,6 +61,7 @@ const player = {
         for (let i = 0; i < this.actionCount; i++) {
             playerActionsText.innerText += "◈";
         }
+        // Combat buttons are unlocked even if enemy is dead. Needs fix.
         if (!lastAction) {
             unlockCombatButtons();
         }
