@@ -197,9 +197,15 @@ async function go10() {
     button4.style.display = "none";
 }
 
-// Implement after step 5
+// NEXT STAGE
 async function go11() {
-    console.log("Not yet implemented");
+    // Clear combat interface
+    combatText.innerHTML = "";
+    // Update text field
+    text.innerHTML = sceneText[11];
+    // Update buttons
+    button1.innerText = "Swim Across";
+    button1.onclick = dummy;
 }
 
 async function go13() {
