@@ -47,7 +47,11 @@ function startGame() {
     // Window variables
     button1.onclick = go13;
     button2.onclick = go5;
-    button3.onclick = gameState.pullLever;
+    button3.onclick = () => {
+        console.log(gameState.lever);
+        gameState.pullLever();
+        console.log(gameState.lever);
+    };
     button4.onclick = dummy;
 
     // Player variables
