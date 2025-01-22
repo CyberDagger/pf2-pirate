@@ -70,7 +70,7 @@ function unlockSkillButtons() {
 }
 
 function displayEnemy(enemyId) {
-    // <img src="..images/wolf.png">
+    // <img src="../images/wolf.png">
     let file;
     if (enemyId === 0) {
         file = "wolf";
