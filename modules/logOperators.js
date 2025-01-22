@@ -77,7 +77,7 @@ function displayEnemy(enemyId) {
     } else if (enemyId === 1) {
         file = "snake"
     }
-    enemyImage.innerHTML = "<img src=\"/images/" + file + ".png\">";
+    enemyImage.innerHTML = "<img src=\"pf2-pirate/images/" + file + ".png\">";
 }
 
 export {wait, scrollLog, log, logPlayer, logEnemy, logSkill, lockButtons, unlockButtons, lockCombatButtons, unlockCombatButtons, lockSkillButtons, unlockSkillButtons, displayEnemy};
