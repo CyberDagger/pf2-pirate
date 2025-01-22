@@ -116,22 +116,21 @@ async function go5() {
     // Update text field
     text.innerHTML = sceneText[5];
     // Update buttons
-    button1.innerText = "Proceed";
-    button2.innerText = "Has Lever";
-    button3.innerText = "Take Torch";
-    button1.onclick = go16;
-    button2.onclick = dummy;
-    button3.onclick = async () => {
-        button3.disabled = true;
+    if (gameState.lever) {
+        button1.innerText = "Has Lever";
+        button1.onclick = go16;
+    } else {
+        button1.innerText = "Proceed";
+        button1.onclick = go11;
+    }
+    button2.innerText = "Take Torch";
+    button2.onclick = async () => {
+        button2.disabled = true;
         gameState.takeTorch();
     };
     button1.style.display = "inline-block";
-    if (gameState.lever) {
-        button2.style.display = "inline-block";
-    } else {
-        button2.style.display = "none";
-    }
-    button3.style.display = "inline-block";
+    button2.style.display = "inline-block";
+    button3.style.display = "none";
     button4.style.display = "none";
     console.log("Lever state: " + gameState.lever);
 }
@@ -150,7 +149,6 @@ async function go7() {
     button4.style.display = "none";
 }
 
-    // Do next
 async function go8() {
     // Clear combat interface
     combatText.innerHTML = "";
@@ -197,6 +195,11 @@ async function go10() {
     button2.style.display = "none";
     button3.style.display = "none";
     button4.style.display = "none";
+}
+
+// Implement after step 5
+async function go11() {
+    console.log("Not yet implemented");
 }
 
 async function go13() {
