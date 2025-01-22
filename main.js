@@ -4,7 +4,7 @@ import {timerShort, timerLong} from "./modules/time.js";
 import roll from "./modules/dice.js";
 import player from "./modules/player.js";
 import {Wolf, Snake} from "./modules/enemy.js";
-import {wait, scrollLog, log, logPlayer, logEnemy, lockButtons, unlockButtons, displayEnemy, lockSkillButtons} from "./modules/logOperators.js";
+import {wait, scrollLog, log, logPlayer, logEnemy, lockButtons, unlockButtons, displayEnemy, lockSkillButtons, lockCombatButtons} from "./modules/logOperators.js";
 import gameState from "./modules/gameState.js";
 
 document.addEventListener("DOMContentLoaded", startGame);
@@ -46,8 +46,8 @@ const scenes = [
 function startGame() {
     // Window variables
     button1.onclick = go13;
-    button2.onclick = go10;
-    button3.onclick = dummy;
+    button2.onclick = go5;
+    button3.onclick = gameState.pullLever;
     button4.onclick = dummy;
 
     // Player variables
@@ -66,10 +66,11 @@ function startGame() {
     inventoryText.innerText = player.inventory[0];
     //button2.style.display = "none";
     button2.style.display = "inline-block";
-    button3.style.display = "none";
+    button3.style.display = "inline-block";
     button4.style.display = "none";
     button1.innerText = "Begin";
     button2.innerText = "Skip to Test";
+    button3.innerText = "Flip Variable";
     combatText.innerText = "";
     text.innerHTML = sceneText[1];
 
@@ -121,9 +122,14 @@ async function go5() {
         gameState.takeTorch();
     };
     button1.style.display = "inline-block";
-    button2.style.display = "inline-block";
+    if (gameState.lever) {
+        button2.style.display = "inline-block";
+    } else {
+        button2.style.display = "none";
+    }
     button3.style.display = "inline-block";
     button4.style.display = "none";
+    console.log("Lever state: " + gameState.lever);
 }
 
 async function go7() {
@@ -316,6 +322,7 @@ async function startFight(enemyId) {
         let checkTurnEnd = await player.attack(enemy);
         console.log("Player actions: " + checkTurnEnd);
         if (enemy.hp === 0) {
+            lockCombatButtons();
             await wait(timerLong);
             if (enemyId === 0) {
                 unlockButtons();

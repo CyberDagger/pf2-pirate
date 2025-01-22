@@ -48,10 +48,18 @@ const player = {
         this.copper = 0;
     },
     // Get item
+    printInventory() {
+        let inventoryString = this.inventory[0];
+        for (let i = 1; i < this.inventory.length; i++) {
+            inventoryString += ", ";
+            inventoryString += this.inventory[i];
+        }
+        return inventoryString;
+    },
     pushInventory(item) {
         this.inventory.push(item);
-        console.log(inventory);
-        inventoryText = this.inventory.toString();
+        console.log(this.inventory);
+        inventoryText.innerText = this.printInventory();
     },
 
     // Auxiliary combat methods

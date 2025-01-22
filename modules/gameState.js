@@ -10,6 +10,9 @@ let gameState = {
     lever: false,
     torch: false,
     
+    getLever() {
+        return this.lever;
+    },
 
     reset() {
         this.distance = 0;
@@ -27,6 +30,7 @@ let gameState = {
 
     pullLever() {
         this.lever = true;
+        console.log("Lever flipped: " + this.lever);
     },
 
     takeTorch() {
