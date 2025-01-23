@@ -4,7 +4,7 @@
 
 // Module imports
 import {timerShort, timerLong} from "./time.js";
-import { enemyImage } from "./DOMelements.js";
+import { enemyImage, skillSuccesses } from "./DOMelements.js";
 
 // Wait function to insert delay between messages
 // Time in miliseconds, 
@@ -39,6 +39,18 @@ async function logEnemy(text) {
 async function logSkill(text) {
     await wait(timerShort);
     skillText.innerHTML += "<p>" + text + "</p>";
+}
+
+function writeSkillResult(success) {
+    if (success) {
+        skillSuccesses.innerText += "◈";
+    } else {
+        skillFailures.innerText += "◈";
+    }
+}
+function clearSkillResults() {
+    skillSuccesses.innerText = "";
+    skillFailures.innerText = "";
 }
 
 // Button switch
@@ -80,5 +92,5 @@ function displayEnemy(enemyId) {
     enemyImage.innerHTML = "<img src=\"./images/" + file + ".png\">";
 }
 
-export {wait, scrollLog, log, logPlayer, logEnemy, logSkill, lockButtons, unlockButtons, lockCombatButtons, unlockCombatButtons, lockSkillButtons, unlockSkillButtons, displayEnemy};
+export {wait, scrollLog, log, logPlayer, logEnemy, logSkill, lockButtons, unlockButtons, lockCombatButtons, unlockCombatButtons, lockSkillButtons, unlockSkillButtons, writeSkillResult, clearSkillResults, displayEnemy};
 

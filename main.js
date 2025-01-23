@@ -4,7 +4,7 @@ import {timerShort, timerLong} from "./modules/time.js";
 import roll from "./modules/dice.js";
 import player from "./modules/player.js";
 import {Wolf, Snake} from "./modules/enemy.js";
-import {wait, scrollLog, log, logPlayer, logEnemy, lockButtons, unlockButtons, displayEnemy, lockSkillButtons, lockCombatButtons} from "./modules/logOperators.js";
+import {wait, scrollLog, log, logPlayer, logEnemy, lockButtons, unlockButtons, displayEnemy, lockSkillButtons, lockCombatButtons, clearSkillResults} from "./modules/logOperators.js";
 import gameState from "./modules/gameState.js";
 
 document.addEventListener("DOMContentLoaded", startGame);
@@ -46,7 +46,7 @@ const scenes = [
 function startGame() {
     // Window variables
     button1.onclick = go13;
-    button2.onclick = go5;
+    button2.onclick = go18;
     button3.onclick = () => {
         console.log(gameState.lever);
         gameState.pullLever();
@@ -201,11 +201,32 @@ async function go10() {
 async function go11() {
     // Clear combat interface
     combatText.innerHTML = "";
+    clearSkillResults();
+    // Set skill DC
+    let dc = 15;
+    let countS = 0;
+    let countF = 0;
     // Update text field
     text.innerHTML = sceneText[11];
     // Update buttons
     button1.innerText = "Swim Across";
-    button1.onclick = dummy;
+    button1.onclick = async () => {
+        lockButtons();
+        skillText.innerHTML = "";
+        skillButton.innerText = "Roll Athletics";
+        skillButton.onclick = async () => {
+            if (await player.rollAthletics()) {
+                countS++;
+            } else {
+                countF++;
+            }
+            if (countF >= 3) {
+                skillButton.onclick = () => {
+                    
+                }
+            }
+        }
+    };
 }
 
 async function go13() {
@@ -249,34 +270,37 @@ async function go17() {
 async function go18() {
     // Clear combat interface
     combatText.innerHTML = "";
+    clearSkillResults();
     // Set skill DC
     let dc = 15;
     // Update text field
     text.innerHTML = sceneText[18];
     // Update buttons
-    button1.innerText = "Roll Perception";
+    button1.innerText = "Investigate the Wall";
     button1.onclick = async () => {
+        lockButtons();
         skillText.innerHTML = "";
-        //lockButtons();
-        //lockSkillButtons();
-        skill.style.display = "block";
-        if (await player.rollPerception(dc)) {
-            // To be implemented
-            console.log("Player passed Perception check. Step 24 not yet implemented.");
-            skillButton.onclick = () => {
-                skill.style.display = "none";
-                unlockButtons();
-                go24();
+        skillButton.innerText = "Roll Perception";
+        skillButton.onclick = async () => {
+            if (await player.rollPerception(dc)) {
+                // To be implemented
+                console.log("Player passed Perception check. Step 24 not yet implemented.");
+                skillButton.onclick = () => {
+                    skill.style.display = "none";
+                    unlockButtons();
+                    go24();
+                }
+            } else {
+                console.log("Player failed Perception check. Moving to step 21.");
+                skillButton.onclick = () => {
+                    skill.style.display = "none";
+                    unlockButtons();
+                    go21();
+                }
             }
-        } else {
-            // Implementing
-            console.log("Player failed Perception check. Moving to step 21.");
-            skillButton.onclick = () => {
-                skill.style.display = "none";
-                unlockButtons();
-                go21();
-            }
+            skillButton.innerText = "Proceed";
         }
+        skill.style.display = "block";
     };
     button2.style.display = "none";
     button3.style.display = "none";

@@ -4,7 +4,7 @@
 
 // Module imports
 import {playerHealthText, playerArmorText, playerAttackText, playerActionsText, inventoryText} from "./DOMelements.js";
-import {wait, scrollLog, log, logPlayer, logSkill, lockButtons, unlockButtons, lockCombatButtons, unlockCombatButtons, lockSkillButtons, unlockSkillButtons} from "./logOperators.js";
+import {wait, scrollLog, log, logPlayer, logSkill, lockButtons, unlockButtons, lockCombatButtons, unlockCombatButtons, lockSkillButtons, unlockSkillButtons, writeSkillResult} from "./logOperators.js";
 import roll from "./dice.js";
 import { timerLong, timerShort } from "./time.js";
 
@@ -111,14 +111,36 @@ const player = {
         await logSkill("You roll a " + skillRoll + ". (" + (skillRoll - this.perception) + `${this.perception >=0 ? "+" : ""}` + this.perception + ")");
         if (skillRoll >= dc) {
             await logSkill("You pass!");
+            writeSkillResult(true);
             await wait(timerLong);
             unlockSkillButtons();
             return true;
         } else {
             await logSkill("You fail.");
-            await wait(timerLong);;
+            writeSkillResult(false);
+            await wait(timerLong);
             unlockSkillButtons();
             console.log("The false value should be returned here.");
+            return false;
+        }
+    },
+    async rollAthletics(dc) {
+        lockButtons();
+        lockSkillButtons();
+        await logSkill("You roll an Athletics check. (1d20+" + this.athletics + ")");
+        let skillRoll = roll(20) + this.athletics;
+        await logSkill("You roll a " + skillRoll + ". (" + (skillRoll - this.athletics) + `${this.athletics >=0 ? "+" : ""}` + this.athletics + ")");
+        if (skillRoll >= dc) {
+            await logSkill("You pass!");
+            writeSkillResult(true);
+            await wait(timerLong);
+            unlockSkillButtons();
+            return true;
+        } else {
+            await logSkill("You fail.");
+            writeSkillResult(false);
+            await wait(timerLong);
+            unlockSkillButtons();
             return false;
         }
     },
