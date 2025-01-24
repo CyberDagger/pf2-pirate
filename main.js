@@ -1,10 +1,51 @@
-import {button1, button2, button3, button4, combatButton1, combatButton2, text, combatText, skillText, healthText, goldText, inventoryText, playerStats, playerHealthText, playerArmorText, playerAttackText, playerDamageText, playerActionsText, playerPerceptionText, playerAthleticsText, playerFortitudeText, playerReflexText, enemyStats, enemyNameText, enemyHealthText, enemyArmorText, distanceGraph, skillButton} from "./modules/DOMelements.js";
+import {
+    button1,
+    button2,
+    button3,
+    button4,
+    combatButton1,
+    combatButton2,
+    text,
+    combatText,
+    skillText,
+    healthText,
+    goldText,
+    inventoryText,
+    playerStats,
+    playerHealthText,
+    playerArmorText,
+    playerAttackText,
+    playerDamageText,
+    playerActionsText,
+    playerPerceptionText,
+    playerAthleticsText,
+    playerFortitudeText,
+    playerReflexText,
+    enemyStats,
+    enemyNameText,
+    enemyHealthText,
+    enemyArmorText,
+    skillButton
+} from "./modules/DOMelements.js";
 import sceneText from "./modules/text.js";
-import {timerShort, timerLong} from "./modules/time.js";
+import {
+    timerShort,
+    timerLong
+} from "./modules/time.js";
 import roll from "./modules/dice.js";
 import player from "./modules/player.js";
-import {Wolf, Snake} from "./modules/enemy.js";
-import {wait, scrollLog, log, logPlayer, logEnemy, lockButtons, unlockButtons, displayEnemy, lockSkillButtons, lockCombatButtons, clearSkillResults} from "./modules/logOperators.js";
+import {
+    Wolf,
+    Snake
+} from "./modules/enemy.js";
+import {
+    wait,
+    lockButtons,
+    unlockButtons,
+    displayEnemy,
+    lockCombatButtons,
+    clearSkillResults
+} from "./modules/logOperators.js";
 import gameState from "./modules/gameState.js";
 
 document.addEventListener("DOMContentLoaded", startGame);
@@ -46,7 +87,7 @@ const scenes = [
 function startGame() {
     // Window variables
     button1.onclick = go13;
-    button2.onclick = go18;
+    button2.onclick = go11;
     button3.onclick = () => {
         console.log(gameState.lever);
         gameState.pullLever();
@@ -109,7 +150,10 @@ function writeLogHud() {
 // If I was making the adventure from scratch, I would use a more fitting structure for a fully blind game,
 // but I feel it would be more work than it's worth to do so here.
 
-// Next step
+async function go3() {
+    console.log("Not yet implemented");
+}
+
 async function go5() {
     // Clear combat interface
     combatText.innerHTML = "";
@@ -215,18 +259,41 @@ async function go11() {
         skillText.innerHTML = "";
         skillButton.innerText = "Roll Athletics";
         skillButton.onclick = async () => {
-            if (await player.rollAthletics()) {
+            if (await player.rollAthletics(dc)) {
                 countS++;
             } else {
                 countF++;
             }
             if (countF >= 3) {
+                console.log("YOU DIED");
+                skillButton.innerText = "Proceed";
                 skillButton.onclick = () => {
-                    
+                    skillButton.onclick = () => {
+                        skill.style.display = "none";
+                        unlockButtons();
+                        go17();
+                    }
+                }
+            } else if (countS >= 2) {
+                console.log("Way to go, Michael Phelps!");
+                skillButton.innerText = "Proceed";
+                skillButton.onclick = () => {
+                    skillButton.onclick = () => {
+                        skill.style.display = "none";
+                        unlockButtons();
+                        go3();
+                    }
                 }
             }
         }
+        skill.style.display = "block";
     };
+    button1.style.display = "inline-block";
+    button2.innerText = "Go Back";
+    button2.onclick = go15;
+    button2.style.display = "inline-block";
+    button3.style.display = "none";
+    button4.style.display = "none";
 }
 
 async function go13() {

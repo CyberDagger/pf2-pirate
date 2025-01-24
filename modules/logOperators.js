@@ -3,8 +3,14 @@
 /*-----------------------*/
 
 // Module imports
-import {timerShort, timerLong} from "./time.js";
-import { enemyImage, skillSuccesses } from "./DOMelements.js";
+import {
+    timerShort,
+    timerLong
+} from "./time.js";
+import {
+    enemyImage,
+    skillSuccesses
+} from "./DOMelements.js";
 
 // Wait function to insert delay between messages
 // Time in miliseconds, 
@@ -18,6 +24,9 @@ async function wait(time) {
 // Use after actors take actions in combat
 function scrollLog() {
     combatText.scrollTo(0, combatText.scrollHeight);
+}
+function scrollSkill() {
+    skillText.scrollTo(0, skillText.scrollHeight);
 }
 
 //Text functions
@@ -39,6 +48,7 @@ async function logEnemy(text) {
 async function logSkill(text) {
     await wait(timerShort);
     skillText.innerHTML += "<p>" + text + "</p>";
+    scrollSkill();
 }
 
 function writeSkillResult(success) {
