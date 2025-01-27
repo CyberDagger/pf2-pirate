@@ -1,12 +1,32 @@
+import {
+    playerHealthText,
+    playerArmorText,
+    playerAttackText,
+    playerActionsText,
+    inventoryText
+} from "./DOMelements.js";
+import {wait,
+    scrollLog,
+    log,
+    logPlayer,
+    logSkill,
+    lockButtons,
+    unlockButtons,
+    lockCombatButtons,
+    unlockCombatButtons,
+    lockSkillButtons,
+    unlockSkillButtons,
+    writeSkillResult
+} from "./logOperators.js";
+import roll from "./dice.js";
+import {
+    timerLong,
+    timerShort
+} from "./time.js";
+
 /*--------*/
 /* Player */
 /*--------*/
-
-// Module imports
-import {playerHealthText, playerArmorText, playerAttackText, playerActionsText, inventoryText} from "./DOMelements.js";
-import {wait, scrollLog, log, logPlayer, logSkill, lockButtons, unlockButtons, lockCombatButtons, unlockCombatButtons, lockSkillButtons, unlockSkillButtons, writeSkillResult} from "./logOperators.js";
-import roll from "./dice.js";
-import { timerLong, timerShort } from "./time.js";
 
 // Player object
 const player = {

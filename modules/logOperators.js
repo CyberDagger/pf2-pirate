@@ -1,8 +1,3 @@
-/*-----------------------*/
-/* Log Writing Functions */
-/*-----------------------*/
-
-// Module imports
 import {
     timerShort,
     timerLong
@@ -11,6 +6,10 @@ import {
     enemyImage,
     skillSuccesses
 } from "./DOMelements.js";
+
+/*-----------------------*/
+/* Log Writing Functions */
+/*-----------------------*/
 
 // Wait function to insert delay between messages
 // Time in miliseconds, 

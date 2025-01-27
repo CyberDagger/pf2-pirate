@@ -2,7 +2,9 @@
 /* Game State Record */
 /*-------------------*/
 
-import {button1, button2, button3, button4, text, combatText, healthText, goldText, inventoryText, playerStats, playerHealthText, playerArmorText, playerAttackText, playerDamageText, playerActionsText, playerPerceptionText, playerAthleticsText, playerFortitudeText, playerReflexText, enemyStats, enemyNameText, enemyHealthText, enemyArmorText, distanceGraph} from "./DOMelements.js";
+import {
+    distanceGraph
+} from "./DOMelements.js";
 import player from "./player.js";
 
 const gameState = {

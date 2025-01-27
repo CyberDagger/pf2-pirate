@@ -1,14 +1,26 @@
-/*-------------------------*/
-/* Enemy Class Definitions */
-/*-------------------------*/
-
-// Module imports
-import {combatText, enemyHealthText} from "./DOMelements.js";
-import {timerShort, timerLong} from "./time.js";
-import {wait, scrollLog, log, logEnemy, lockCombatButtons, unlockCombatButtons} from "./logOperators.js";
+import {
+    combatText,
+    enemyHealthText
+} from "./DOMelements.js";
+import {
+    timerShort,
+    timerLong
+} from "./time.js";
+import {
+    wait,
+    scrollLog,
+    log,
+    logEnemy,
+    lockCombatButtons,
+    unlockCombatButtons
+} from "./logOperators.js";
 import roll from "./dice.js";
 import player from "./player.js";
 import gameState from "./gameState.js";
+
+/*-------------------------*/
+/* Enemy Class Definitions */
+/*-------------------------*/
 
 // Enemy classes
 class Enemy {

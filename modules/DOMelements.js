@@ -36,4 +36,37 @@ const enemyHealthText = document.querySelector("#enemyHealth");
 const enemyArmorText = document.querySelector("#enemyArmor");
 const distanceGraph = document.querySelector("#distanceGraph");
 
-export {button1, button2, button3, button4, combatButton1, combatButton2, skillButton, enemyImage, text, combatText, skillText, skillResults, skillSuccesses, skillFailures, healthText, goldText, inventoryText, playerStats, playerHealthText, playerArmorText, playerAttackText, playerDamageText, playerActionsText, playerPerceptionText, playerAthleticsText, playerFortitudeText, playerReflexText, enemyStats, enemyNameText, enemyHealthText, enemyArmorText, distanceGraph};
+export {
+    button1,
+    button2,
+    button3,
+    button4,
+    combatButton1,
+    combatButton2,
+    skillButton,
+    enemyImage,
+    text,
+    combatText,
+    skillText,
+    skillResults,
+    skillSuccesses,
+    skillFailures,
+    healthText,
+    goldText,
+    inventoryText,
+    playerStats,
+    playerHealthText,
+    playerArmorText,
+    playerAttackText,
+    playerDamageText,
+    playerActionsText,
+    playerPerceptionText,
+    playerAthleticsText,
+    playerFortitudeText,
+    playerReflexText,
+    enemyStats,
+    enemyNameText,
+    enemyHealthText,
+    enemyArmorText,
+    distanceGraph
+};
