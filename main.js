@@ -241,7 +241,6 @@ async function go10() {
     button4.style.display = "none";
 }
 
-// NEXT STAGE
 async function go11() {
     // Clear combat interface
     combatText.innerHTML = "";
@@ -313,6 +312,7 @@ async function go13() {
     button4.style.display = "none";
 }
 
+// NEXT STAGE
 async function go15() {
     console.log("Not yet implemented");
 }
