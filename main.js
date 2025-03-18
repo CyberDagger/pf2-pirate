@@ -87,10 +87,10 @@ const scenes = [
 function startGame() {
     // Window variables
     button1.onclick = go13;
-    button2.onclick = go11;
+    button2.onclick = go15;
     button3.onclick = () => {
         console.log(gameState.lever);
-        gameState.pullLever();
+        gameState.takeTorch();
         console.log(gameState.lever);
     };
     button4.onclick = dummy;
@@ -149,6 +149,10 @@ function writeLogHud() {
 // The original Pirate King's Plunder is in the form of a choose your own adventure book.
 // If I was making the adventure from scratch, I would use a more fitting structure for a fully blind game,
 // but I feel it would be more work than it's worth to do so here.
+
+async function go2() {
+    console.log("Not yet implemented");
+}
 
 async function go3() {
     console.log("Not yet implemented");
@@ -312,9 +316,27 @@ async function go13() {
     button4.style.display = "none";
 }
 
-// NEXT STAGE
 async function go15() {
-    console.log("Not yet implemented");
+    // Clear combat interface
+    combatText.innerHTML = "";
+    // Update text field
+    text.innerHTML = sceneText[15];
+    // Update buttons
+    button1.innerText = "Smash the icicle";
+    button1.onclick = go20;
+    button2.innerText = "Use the Torch to melt the icicle";
+    button2.onclick = go2;
+    if (gameState.torch) {
+        button2.style.display = "inline-block";
+    } else {
+        button2.style.display = "none";
+    }
+    button3.innerText = "Jump down the chute";
+    button3.onclick = go23;
+    button3.style.display = "inline-block";
+    button4.innerText = "Go back";
+    button4.onclick = go5;
+    button4.style.display = "inline-block";
 }
 
 async function go16() {
@@ -374,8 +396,35 @@ async function go18() {
     button4.style.display = "none";
 }
 
+async function go20() {
+    // Clear combat interface
+    combatText.innerHTML = "";
+    // Update text field
+    text.innerHTML = sceneText[20];
+    // Update buttons
+    button1.innerText = "Destroy the icicle";
+    button1.onclick = async () => {
+        player.loseHp(3)
+        if (player.hp <= 0) {
+            go17();
+        } else {
+            go2();
+        }
+    }
+    button2.innerText = "Jump down the chute";
+    button2.onclick = go23;
+    button2.style.display = "inline-block";
+    button3.innerText = "Go back";
+    button3.onclick = go5;
+    button3.style.display = "inline-block";
+    button4.style.display = "none";
+    // Check if dead
+    if (player.hp <= 0) {
+        go17();
+    }
+}
+
 async function go21() {
-    console.log("Initiating step 21...");
     // Clear combat interface
     combatText.innerHTML = "";
     // Update text field
@@ -388,8 +437,29 @@ async function go21() {
     button4.style.display = "none";
 }
 
+// NEXT STAGE
+async function go23() {
+    // Clear combat interface
+    combatText.innerHTML = "";
+    clearSkillResults();
+    // Set skill DC
+    let dc = 17;
+    // Update text field
+    text.innerHTML = sceneText[23];
+    // Update buttons
+    button1.innerText = "Dodge the icicle";
+    button1.onclick = async () => {
+        lockButtons();
+        skillText.innerHTML = "";
+        skillButton.innerText = "Roll Reflex";
+        skillButton.onclick = async () => {
+            
+        }
+    }
+}
+
 async function go24() {
-    // To be implemented
+    console.log("Not yet implemented");
 }
 
 /*------------------------*/

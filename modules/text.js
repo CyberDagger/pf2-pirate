@@ -34,7 +34,7 @@ const sceneText = [
     // 14
     "14",
     // 15
-    "15",
+    "<p>You turn left and make your way down a narrow tunnel that leads into darkness. The air grows colder with each step you take and soon you can see your breath steaming in the gloom. Up ahead, the passage turns to the right, but a pale-blue radiance can be seen from around the corner. Just beyond the bend, the corridor opens into a small, icy chamber.</p><p>Opposite you is an ice-covered chute that descends into darkness. Rimmed with icicles, it looks almost like a hungry maw. Above this chute, carved into the stone itself, is a warning. It reads, \“An icy plunge may take you to the Pirate King’s treasure—or to your grave!\”</p><p>Hanging from the ceiling is a large icicle, and you can clearly see something glittering inside.</p>",
     // 16
     "16",
     // 17
@@ -44,9 +44,17 @@ const sceneText = [
     // 19
     "19",
     // 20
-    "20",
+    "<p>Using your blade, you begin to hack away at the icicle, but the first time you strike it, a wave of powerful, magical cold washes up your arm. You take 1 damage. It looks like if you want to destroy the icicle, you’ll need to hit it at least three more times, taking another 3 damage.</p>",
     // 21
-    "<p>You look around but fail to spot anything of interest. With no other way to go, you head down the corridor that leads off to the left. You notice a faint breeze as you make your way down that tunnel.</p>"
+    "<p>You look around but fail to spot anything of interest. With no other way to go, you head down the corridor that leads off to the left. You notice a faint breeze as you make your way down that tunnel.</p>",
+    // 22
+    "22",
+    // 23
+    "<p>Abandoning caution, you dive down the chute, heading into the freezing darkness!</p><p>The surface is slick and freezing cold, and you pick up quite a bit of speed as you descend deeper into the earth. Just as the chute begins to level out, you see a massive icicle up ahead, blocking most of the tunnel. At this speed, running into it is going to hurt!</p><div class=\"instruction\"><p>You can try to avoid hitting the icicle and taking any serious harm by attempting a Reflex saving throw. Roll a d20 and add your save bonus. If your check result is less than the DC, you take 1d8 points of damage from running into the icicle. If you succeed, you take half damage. If your roll results in a 20, you critically succeed and avoid the icicle completely, taking no damage! Finally, if your roll results in a 1 or a 2, you critically fail the saving throw and take double damage.</p></div>",
+    // 24
+    "24",
+    // 25
+    "25"
 ]
 
 export default sceneText;
