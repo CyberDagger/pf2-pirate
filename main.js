@@ -453,7 +453,23 @@ async function go23() {
         skillText.innerHTML = "";
         skillButton.innerText = "Roll Reflex";
         skillButton.onclick = async () => {
-            
+            if (await player.saveReflex(dc)) {
+                // To be implemented
+                console.log("Player passed Reflex save. Step 24 not yet implemented.");
+                skillButton.onclick = () => {
+                    skill.style.display = "none";
+                    unlockButtons();
+                    go24();
+                }
+            } else {
+                console.log("Player failed Reflex save. Moving to step 21.");
+                skillButton.onclick = () => {
+                    skill.style.display = "none";
+                    unlockButtons();
+                    go21();
+                }
+            }
+            skillButton.innerText = "Proceed";
         }
     }
 }

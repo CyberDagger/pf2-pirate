@@ -182,6 +182,18 @@ const player = {
             return false;
         }
     },
+    async saveReflex(dc) {
+        lockSkillButtons();
+        await logPlayer("You roll a Reflex save. (1d20+" + this.reflex + ")");
+        let saveRoll = roll(20) + this.reflex;
+        await logPlayer("You roll a " + saveRoll + ". (" + (saveRoll - this.reflex) + `${this.reflex >=0 ? "+" : ""}` + this.reflex + ")");
+        let damageRoll = roll(8);
+        if (saveRoll < dc) {
+            if (saveRoll < (dc - 10)) {
+                this.loseHp
+            }
+        }
+    },
     // Combat actions
     async attack(enemy) {
         lockCombatButtons();
